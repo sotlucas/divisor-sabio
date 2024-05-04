@@ -1,7 +1,9 @@
 <!-- PROJECT LOGO -->
+
 # Divisor Sabio
 
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 To get a local copy up and running follow these simple example steps.
@@ -21,7 +23,7 @@ Ensure you have the following installed:
 
   ```bash
   git clone git@github.com:sotlucas/tp-gestion.git
-  cd tp-gestion 
+  cd tp-gestion
   ```
 
 - **Step 2**: Copy the `.env.example` files
@@ -42,7 +44,14 @@ Ensure you have the following installed:
   npm install
   ```
 
-- **Step 4**: Launch the project
+- **Step 4**: Run migrations
+
+  ```bash
+  npm run db:generate
+  npm run db:migrate
+  ```
+
+- **Step 5**: Launch the project
 
   ```bash
   npm run dev
