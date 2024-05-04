@@ -10,5 +10,7 @@ down:
 	docker compose -f docker-compose.yml down
 
 migrate:
+	docker compose -f docker-compose.yml up -d
 	npm run db:generate
 	npm run db:migrate
+	docker compose -f docker-compose.yml down
