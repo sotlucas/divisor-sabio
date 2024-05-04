@@ -26,36 +26,38 @@ Ensure you have the following installed:
   cd tp-gestion
   ```
 
-- **Step 2**: Copy the `.env.example` files
+- **Step 2**: Run the **install** makefile
 
   ```bash
-  cp .env.example .env
+  make install
   ```
 
-- **Step 2**: Run the docker postgres container
+  Which does the following:
 
-  ```bash
-  docker compose up -d
-  ```
+  - Copy the `.env.example` files
 
-- **Step 3**: Install NPM packages
+    ```bash
+    cp .env.example .env
+    ```
 
-  ```bash
-  npm install
-  ```
+  - Install NPM packages
 
-- **Step 4**: Run migrations
+    ```bash
+    npm install
+    ```
 
-  ```bash
-  npm run db:generate
-  npm run db:migrate
-  ```
+  - Run the docker postgres container
 
-- **Step 5**: Launch the project
+    ```bash
+    docker compose up -d
+    ```
 
-  ```bash
-  npm run dev
-  ```
+  - Run the migrations
+
+    ```bash
+    npm run db:generate
+    npm run db:migrate
+    ```
 
 ### Running
 
