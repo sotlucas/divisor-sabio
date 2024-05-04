@@ -56,3 +56,23 @@ Ensure you have the following installed:
   ```bash
   npm run dev
   ```
+
+### Running
+
+- **Launch the project**:
+
+  ```bash
+  make run
+  ```
+
+- **Stop the project**:
+
+  ```bash
+  make down
+  ```
+
+- **Run the migrations**: Run when a database table is changed
+
+  ```bash
+  make migrate
+  ```
