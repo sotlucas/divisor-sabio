@@ -1,8 +1,8 @@
-<!-- PROJECT LOGO -->
 
-# Divisor Sabio
-
-<!-- GETTING STARTED -->
+<p align="center">
+  <img src="https://github.com/sotlucas/tp-gestion/assets/36085103/3feb1447-3d4a-4fae-b8ce-b73d598f1da0" />
+  <h1 align="center"> Divisor Sabio </h1>
+</p>
 
 ## Getting Started
 
