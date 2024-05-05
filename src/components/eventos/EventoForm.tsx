@@ -46,7 +46,7 @@ const EventoForm = ({
   const { errors, hasErrors, setErrors, handleChange } =
     useValidatedForm<Evento>(insertEventoParams);
   const editing = !!evento?.id;
-    const [fechaInicio, setFechaInicio] = useState<Date | undefined>(
+    const [fechaInicio, setFechaInicio] = useState<any>(
     evento?.fechaInicio,
   );
 
