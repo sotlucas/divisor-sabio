@@ -9,15 +9,7 @@ import { Button } from "@/components/ui/button";
 import Modal from "@/components/shared/Modal";
 import EventoForm from "@/components/eventos/EventoForm";
 
-
-export default function OptimisticEvento({ 
-  evento,
-   
-}: { 
-  evento: Evento; 
-  
-  
-}) {
+export default function OptimisticEvento({ evento }: { evento: Evento }) {
   const [open, setOpen] = useState(false);
   const openModal = (_?: Evento) => {
     setOpen(true);
@@ -29,10 +21,9 @@ export default function OptimisticEvento({
 
   return (
     <div className="m-4">
-      <Modal open={open} setOpen={setOpen}>
+      <Modal open={open} setOpen={setOpen} title="Editar evento">
         <EventoForm
           evento={optimisticEvento}
-          
           closeModal={closeModal}
           openModal={openModal}
           addOptimistic={updateEvento}
@@ -41,13 +32,13 @@ export default function OptimisticEvento({
       <div className="flex justify-between items-end mb-4">
         <h1 className="font-semibold text-2xl">{optimisticEvento.nombre}</h1>
         <Button className="" onClick={() => setOpen(true)}>
-          Edit
+          Editar
         </Button>
       </div>
       <pre
         className={cn(
           "bg-secondary p-4 rounded-lg break-all text-wrap",
-          optimisticEvento.id === "optimistic" ? "animate-pulse" : "",
+          optimisticEvento.id === "optimistic" ? "animate-pulse" : ""
         )}
       >
         {JSON.stringify(optimisticEvento, null, 2)}

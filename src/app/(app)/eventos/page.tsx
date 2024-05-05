@@ -25,10 +25,10 @@ const Eventos = async () => {
   await checkAuth();
 
   const { eventos } = await getEventos();
-  
+
   return (
     <Suspense fallback={<Loading />}>
-      <EventoList eventos={eventos}  />
+      <EventoList eventos={eventos} />
     </Suspense>
   );
 };

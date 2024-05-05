@@ -14,8 +14,11 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useBackPath } from "@/components/shared/BackButton";
 
-
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
@@ -27,9 +30,7 @@ import {
   updateEventoAction,
 } from "@/lib/actions/eventos";
 
-
 const EventoForm = ({
-  
   evento,
   openModal,
   closeModal,
@@ -37,7 +38,7 @@ const EventoForm = ({
   postSuccess,
 }: {
   evento?: Evento | null;
-  
+
   openModal?: (evento?: Evento) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
@@ -46,8 +47,8 @@ const EventoForm = ({
   const { errors, hasErrors, setErrors, handleChange } =
     useValidatedForm<Evento>(insertEventoParams);
   const editing = !!evento?.id;
-    const [fechaInicio, setFechaInicio] = useState<Date | undefined>(
-    evento?.fechaInicio,
+  const [fechaInicio, setFechaInicio] = useState<Date | undefined>(
+    evento?.fechaInicio
   );
 
   const [isDeleting, setIsDeleting] = useState(false);
@@ -56,10 +57,9 @@ const EventoForm = ({
   const router = useRouter();
   const backpath = useBackPath("eventos");
 
-
   const onSuccess = (
     action: Action,
-    data?: { error: string; values: Evento },
+    data?: { error: string; values: Evento }
   ) => {
     const failed = Boolean(data?.error);
     if (failed) {
@@ -79,7 +79,9 @@ const EventoForm = ({
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
-    const eventoParsed = await insertEventoParams.safeParseAsync({  ...payload });
+    const eventoParsed = await insertEventoParams.safeParseAsync({
+      ...payload,
+    });
     if (!eventoParsed.success) {
       setErrors(eventoParsed?.error.flatten().fieldErrors);
       return;
@@ -96,10 +98,11 @@ const EventoForm = ({
     };
     try {
       startMutation(async () => {
-        addOptimistic && addOptimistic({
-          data: pendingEvento,
-          action: editing ? "update" : "create",
-        });
+        addOptimistic &&
+          addOptimistic({
+            data: pendingEvento,
+            action: editing ? "update" : "create",
+          });
 
         const error = editing
           ? await updateEventoAction({ ...values, id: evento.id })
@@ -107,11 +110,11 @@ const EventoForm = ({
 
         const errorFormatted = {
           error: error ?? "Error",
-          values: pendingEvento 
+          values: pendingEvento,
         };
         onSuccess(
           editing ? "update" : "create",
-          error ? errorFormatted : undefined,
+          error ? errorFormatted : undefined
         );
       });
     } catch (e) {
@@ -124,11 +127,11 @@ const EventoForm = ({
   return (
     <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
       {/* Schema fields start */}
-              <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
-            errors?.nombre ? "text-destructive" : "",
+            errors?.nombre ? "text-destructive" : ""
           )}
         >
           Nombre
@@ -145,11 +148,11 @@ const EventoForm = ({
           <div className="h-6" />
         )}
       </div>
-        <div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
-            errors?.descripcion ? "text-destructive" : "",
+            errors?.descripcion ? "text-destructive" : ""
           )}
         >
           Descripcion
@@ -161,16 +164,18 @@ const EventoForm = ({
           defaultValue={evento?.descripcion ?? ""}
         />
         {errors?.descripcion ? (
-          <p className="text-xs text-destructive mt-2">{errors.descripcion[0]}</p>
+          <p className="text-xs text-destructive mt-2">
+            {errors.descripcion[0]}
+          </p>
         ) : (
           <div className="h-6" />
         )}
       </div>
-<div>
+      <div>
         <Label
           className={cn(
             "mb-2 inline-block",
-            errors?.fechaInicio ? "text-destructive" : "",
+            errors?.fechaInicio ? "text-destructive" : ""
           )}
         >
           Fecha Inicio
@@ -190,13 +195,13 @@ const EventoForm = ({
               variant={"outline"}
               className={cn(
                 "w-[240px] pl-3 text-left font-normal",
-                !evento?.fechaInicio && "text-muted-foreground",
+                !evento?.fechaInicio && "text-muted-foreground"
               )}
             >
               {fechaInicio ? (
                 <span>{format(fechaInicio, "PPP")}</span>
               ) : (
-                <span>Pick a date</span>
+                <span>Elegir una fecha</span>
               )}
               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
             </Button>
@@ -214,7 +219,9 @@ const EventoForm = ({
           </PopoverContent>
         </Popover>
         {errors?.fechaInicio ? (
-          <p className="text-xs text-destructive mt-2">{errors.fechaInicio[0]}</p>
+          <p className="text-xs text-destructive mt-2">
+            {errors.fechaInicio[0]}
+          </p>
         ) : (
           <div className="h-6" />
         )}
@@ -234,7 +241,8 @@ const EventoForm = ({
             setIsDeleting(true);
             closeModal && closeModal();
             startMutation(async () => {
-              addOptimistic && addOptimistic({ action: "delete", data: evento });
+              addOptimistic &&
+                addOptimistic({ action: "delete", data: evento });
               const error = await deleteEventoAction(evento.id);
               setIsDeleting(false);
               const errorFormatted = {
@@ -246,7 +254,7 @@ const EventoForm = ({
             });
           }}
         >
-          Delet{isDeleting ? "ing..." : "e"}
+          {isDeleting ? "Borrando..." : "Borrar"}
         </Button>
       ) : null}
     </form>
@@ -265,6 +273,8 @@ const SaveButton = ({
   const { pending } = useFormStatus();
   const isCreating = pending && editing === false;
   const isUpdating = pending && editing === true;
+  const crear = isCreating ? "Creando..." : "Crear";
+  const editar = isUpdating ? "Guardando..." : "Guardar";
   return (
     <Button
       type="submit"
@@ -272,9 +282,7 @@ const SaveButton = ({
       disabled={isCreating || isUpdating || errors}
       aria-disabled={isCreating || isUpdating || errors}
     >
-      {editing
-        ? `Sav${isUpdating ? "ing..." : "e"}`
-        : `Creat${isCreating ? "ing..." : "e"}`}
+      {editing ? editar : crear}
     </Button>
   );
 };
