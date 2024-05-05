@@ -1,8 +1,8 @@
 import { db } from "@/lib/db/index";
 import { getUserAuth } from "@/lib/auth/utils";
-import { type EventoId, eventoIdSchema } from "@/lib/db/schema/eventos";
+import { Evento, type EventoId, eventoIdSchema } from "@/lib/db/schema/eventos";
 
-export const getEventos = async () => {
+export const getEventos = async (): Promise<{ eventos: Evento[] }> => {
   const { session } = await getUserAuth();
   const e = await db.evento.findMany({ where: {userId: session?.user.id!}});
   return { eventos: e };
