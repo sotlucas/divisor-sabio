@@ -1,8 +1,8 @@
-<!-- PROJECT LOGO -->
 
-# Divisor Sabio
-
-<!-- GETTING STARTED -->
+<p align="center">
+  <img src="https://github.com/sotlucas/tp-gestion/assets/36085103/3feb1447-3d4a-4fae-b8ce-b73d598f1da0" />
+  <h1 align="center"> Divisor Sabio </h1>
+</p>
 
 ## Getting Started
 
@@ -26,33 +26,55 @@ Ensure you have the following installed:
   cd tp-gestion
   ```
 
-- **Step 2**: Copy the `.env.example` files
+- **Step 2**: Run the **install** makefile
 
   ```bash
-  cp .env.example .env
+  make install
   ```
 
-- **Step 2**: Run the docker postgres container
+  Which does the following:
+
+  - Copy the `.env.example` files
+
+    ```bash
+    cp .env.example .env
+    ```
+
+  - Install NPM packages
+
+    ```bash
+    npm install
+    ```
+
+  - Run the docker postgres container
+
+    ```bash
+    docker compose up -d
+    ```
+
+  - Run the migrations
+
+    ```bash
+    npm run db:generate
+    npm run db:migrate
+    ```
+
+### Running
+
+- **Launch the project**:
 
   ```bash
-  docker compose up -d
+  make run
   ```
 
-- **Step 3**: Install NPM packages
+- **Stop the project**:
 
   ```bash
-  npm install
+  make down
   ```
 
-- **Step 4**: Run migrations
+- **Run the migrations**: Run when a database table is changed
 
   ```bash
-  npm run db:generate
-  npm run db:migrate
-  ```
-
-- **Step 5**: Launch the project
-
-  ```bash
-  npm run dev
+  make migrate
   ```

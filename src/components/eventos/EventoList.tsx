@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-
 import { type Evento, CompleteEvento } from "@/lib/db/schema/eventos";
 import Modal from "@/components/shared/Modal";
 

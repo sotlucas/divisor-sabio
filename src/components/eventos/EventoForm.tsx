@@ -38,7 +38,6 @@ const EventoForm = ({
   postSuccess,
 }: {
   evento?: Evento | null;
-
   openModal?: (evento?: Evento) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
