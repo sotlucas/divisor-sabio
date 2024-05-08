@@ -62,13 +62,14 @@ const EventoForm = ({
     const failed = Boolean(data?.error);
     if (failed) {
       openModal && openModal(data?.values);
-      toast.error(`Failed to ${action}`, {
+      toast.error(`Ocurrió un error`, {
         description: data?.error ?? "Error",
       });
     } else {
       router.refresh();
       postSuccess && postSuccess();
-      toast.success(`Evento ${action}d!`);
+      if (action === "create") toast.success("Evento creado!");
+      if (action === "update") toast.success("Evento actualizado!");
       if (action === "delete") router.push(backpath);
     }
   };
