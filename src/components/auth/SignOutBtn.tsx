@@ -14,9 +14,10 @@ export default function SignOutBtn() {
 
 const Btn = () => {
   const { pending } = useFormStatus();
+  const text = pending ? "Cerrando sesión" : "Cerrar sesión";
   return (
     <Button type="submit" disabled={pending} variant={"destructive"}>
-      Sign{pending ? "ing" : ""} out
+      {text}
     </Button>
   );
 };

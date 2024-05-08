@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import AuthFormError from "@/components/auth/AuthFormError";
 
-
 export default function SignUpPage() {
   const [state, formAction] = useFormState(signUpAction, {
     error: "",
@@ -19,7 +18,7 @@ export default function SignUpPage() {
 
   return (
     <main className="max-w-lg mx-auto my-4 bg-popover p-10">
-      <h1 className="text-2xl font-bold text-center">Create an account</h1>
+      <h1 className="text-2xl font-bold text-center">Creá tu cuenta</h1>
       <AuthFormError state={state} />
       <form action={formAction}>
         <Label htmlFor="email" className="text-muted-foreground">
@@ -28,16 +27,16 @@ export default function SignUpPage() {
         <Input name="email" type="email" id="email" required />
         <br />
         <Label htmlFor="password" className="text-muted-foreground">
-          Password
+          Contraseña
         </Label>
         <Input type="password" name="password" id="password" required />
         <br />
         <SubmitButton />
       </form>
       <div className="mt-4 text-muted-foreground text-center text-sm">
-        Already have an account?{" "}
+        ¿Ya tenés cuenta?{" "}
         <Link href="/sign-in" className="text-secondary-foreground underline">
-          Sign in
+          Iniciá sesión
         </Link>
       </div>
     </main>
@@ -46,9 +45,10 @@ export default function SignUpPage() {
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
+  const text = pending ? "Creando cuenta" : "Crear cuenta";
   return (
     <Button className="w-full" type="submit" disabled={pending}>
-      Sign{pending ? "ing" : ""} up
+      {text}
     </Button>
   );
 };
