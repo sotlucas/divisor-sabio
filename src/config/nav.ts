@@ -1,5 +1,5 @@
 import { SidebarLink } from "@/components/SidebarItems";
-import { Calendar, UserRound } from "lucide-react";
+import { Calendar, User } from "lucide-react";
 
 type AdditionalLinks = {
   title: string;
@@ -7,7 +7,7 @@ type AdditionalLinks = {
 };
 
 export const defaultLinks: SidebarLink[] = [
-  { href: "/dashboard", title: "Perfil", icon: UserRound },
+  { href: "/dashboard", title: "Perfil", icon: User },
   { href: "/eventos", title: "Eventos", icon: Calendar },
   // { href: "/account", title: "Account", icon: Cog },
   // { href: "/settings", title: "Settings", icon: Cog },

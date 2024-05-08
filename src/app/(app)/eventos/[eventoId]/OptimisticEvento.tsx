@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/shared/Modal";
 import EventoForm from "@/components/eventos/EventoForm";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 export default function OptimisticEvento({ evento }: { evento: Evento }) {
   const [open, setOpen] = useState(false);
@@ -35,14 +37,16 @@ export default function OptimisticEvento({ evento }: { evento: Evento }) {
           Editar
         </Button>
       </div>
-      <pre
-        className={cn(
-          "bg-secondary p-4 rounded-lg break-all text-wrap",
-          optimisticEvento.id === "optimistic" ? "animate-pulse" : ""
-        )}
-      >
-        {JSON.stringify(optimisticEvento, null, 2)}
-      </pre>
+      <div className="my-2">
+        <span className="font-bold">Descripción: </span>
+        <span>{optimisticEvento.descripcion}</span>
+      </div>
+      <div className="my-2">
+        <span className="font-bold">Fecha de inicio: </span>
+        <span>
+          {format(optimisticEvento.fechaInicio as Date, "PPP", { locale: es })}
+        </span>
+      </div>
     </div>
   );
 }
