@@ -4,8 +4,8 @@ export const authenticationSchema = z.object({
   email: z.string().email().min(5).max(31),
   password: z
     .string()
-    .min(4, { message: "must be at least 4 characters long" })
-    .max(15, { message: "cannot be more than 15 characters long" }),
+    .min(4, { message: "debe tener mínimo 4 caracteres" })
+    .max(15, { message: "no puede tener más de 15 caracteres" }),
 });
 
 export const updateUserSchema = z.object({

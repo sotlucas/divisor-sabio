@@ -43,8 +43,8 @@ export const setAuthCookie = (cookie: Cookie) => {
 };
 
 const getErrorMessage = (errors: any): string => {
-  if (errors.email) return "Invalid Email";
-  if (errors.password) return "Invalid Password - " + errors.password[0];
+  if (errors.email) return "Email inválido";
+  if (errors.password) return "Contraseña inválida - " + errors.password[0];
   return ""; // return a default error message or an empty string
 };
 
