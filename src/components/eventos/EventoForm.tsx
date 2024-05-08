@@ -22,6 +22,7 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 import { type Evento, insertEventoParams } from "@/lib/db/schema/eventos";
 import {
@@ -196,7 +197,7 @@ const EventoForm = ({
               )}
             >
               {fechaInicio ? (
-                <span>{format(fechaInicio, "PPP")}</span>
+                <span>{format(fechaInicio, "PPP", { locale: es })}</span>
               ) : (
                 <span>Elegir una fecha</span>
               )}
@@ -208,10 +209,8 @@ const EventoForm = ({
               mode="single"
               onSelect={(e) => setFechaInicio(e)}
               selected={fechaInicio}
-              disabled={(date) =>
-                date > new Date() || date < new Date("1900-01-01")
-              }
               initialFocus
+              locale={es}
             />
           </PopoverContent>
         </Popover>
