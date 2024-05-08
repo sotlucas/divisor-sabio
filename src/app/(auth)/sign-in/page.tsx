@@ -18,9 +18,7 @@ export default function SignInPage() {
 
   return (
     <main className="max-w-lg mx-auto my-4 bg-popover p-10">
-      <h1 className="text-2xl font-bold text-center">
-        Sign in to your account
-      </h1>
+      <h1 className="text-2xl font-bold text-center">Ingresá a tu cuenta</h1>
       <AuthFormError state={state} />
       <form action={formAction}>
         <Label htmlFor="email" className="text-muted-foreground">
@@ -29,19 +27,19 @@ export default function SignInPage() {
         <Input name="email" id="email" type="email" required />
         <br />
         <Label htmlFor="password" className="text-muted-foreground">
-          Password
+          Contraseña
         </Label>
         <Input type="password" name="password" id="password" required />
         <br />
         <SubmitButton />
       </form>
       <div className="mt-4 text-sm text-center text-muted-foreground">
-        Don&apos;t have an account yet?{" "}
+        ¿No tenés cuenta?{" "}
         <Link
           href="/sign-up"
           className="text-accent-foreground underline hover:text-primary"
         >
-          Create an account
+          Crear cuenta
         </Link>
       </div>
     </main>
@@ -50,9 +48,10 @@ export default function SignInPage() {
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
+  const text = pending ? "Ingresando" : "Ingresar";
   return (
     <Button className="w-full" type="submit" disabled={pending}>
-      Sign{pending ? "ing" : ""} in
+      {text}
     </Button>
   );
 };
