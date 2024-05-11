@@ -41,7 +41,7 @@ export default function GastoList({
       <Modal
         open={open}
         setOpen={setOpen}
-        title={activeGasto ? "Edit Gasto" : "Create Gasto"}
+        title={activeGasto ? "Editar Gasto" : "Crear Gasto"}
       >
         <GastoForm
           gasto={activeGasto}
@@ -97,7 +97,7 @@ const Gasto = ({
         <div>{gasto.nombre}</div>
       </div>
       <Button variant={"link"} asChild>
-        <Link href={basePath + "/" + gasto.id}>Edit</Link>
+        <Link href={basePath + "/" + gasto.id}>Editar</Link>
       </Button>
     </li>
   );
@@ -107,14 +107,14 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
   return (
     <div className="text-center">
       <h3 className="mt-2 text-sm font-semibold text-secondary-foreground">
-        No gastos
+        No hay gastos
       </h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        Get started by creating a new gasto.
+        Empezá creando un nuevo gasto.
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>
-          <PlusIcon className="h-4" /> New Gastos{" "}
+          <PlusIcon className="h-4" /> Nuevo Gasto{" "}
         </Button>
       </div>
     </div>

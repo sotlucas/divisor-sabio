@@ -37,6 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { es } from "date-fns/locale";
 
 const GastoForm = ({
   eventos,
@@ -73,13 +74,14 @@ const GastoForm = ({
     const failed = Boolean(data?.error);
     if (failed) {
       openModal && openModal(data?.values);
-      toast.error(`Failed to ${action}`, {
+      toast.error(`Ocurrió un error`, {
         description: data?.error ?? "Error",
       });
     } else {
       router.refresh();
       postSuccess && postSuccess();
-      toast.success(`Gasto ${action}d!`);
+      if (action === "create") toast.success("Gasto creado!");
+      if (action === "update") toast.success("Gasto actualizado!");
       if (action === "delete") router.push(backpath);
     }
   };
@@ -206,9 +208,9 @@ const GastoForm = ({
               )}
             >
               {fecha ? (
-                <span>{format(fecha, "PPP")}</span>
+                <span>{format(fecha, "PPP", { locale: es })}</span>
               ) : (
-                <span>Pick a date</span>
+                <span>Elegir una fecha</span>
               )}
               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
             </Button>
@@ -218,10 +220,8 @@ const GastoForm = ({
               mode="single"
               onSelect={(e) => setFecha(e)}
               selected={fecha}
-              disabled={(date) =>
-                date > new Date() || date < new Date("1900-01-01")
-              }
               initialFocus
+              locale={es}
             />
           </PopoverContent>
         </Popover>
@@ -293,7 +293,7 @@ const GastoForm = ({
             });
           }}
         >
-          Delet{isDeleting ? "ing..." : "e"}
+          {isDeleting ? "Eliminando..." : "Eliminar"}
         </Button>
       ) : null}
     </form>
@@ -312,6 +312,8 @@ const SaveButton = ({
   const { pending } = useFormStatus();
   const isCreating = pending && editing === false;
   const isUpdating = pending && editing === true;
+  const crear = isCreating ? "Creando..." : "Crear";
+  const editar = isUpdating ? "Guardando..." : "Guardar";
   return (
     <Button
       type="submit"
@@ -319,9 +321,7 @@ const SaveButton = ({
       disabled={isCreating || isUpdating || errors}
       aria-disabled={isCreating || isUpdating || errors}
     >
-      {editing
-        ? `Sav${isUpdating ? "ing..." : "e"}`
-        : `Creat${isCreating ? "ing..." : "e"}`}
+      {editing ? editar : crear}
     </Button>
   );
 };

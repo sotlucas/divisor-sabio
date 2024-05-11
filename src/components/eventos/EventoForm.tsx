@@ -251,7 +251,7 @@ const EventoForm = ({
             });
           }}
         >
-          {isDeleting ? "Borrando..." : "Borrar"}
+          {isDeleting ? "Eliminando..." : "Eliminar"}
         </Button>
       ) : null}
     </form>

@@ -59,7 +59,7 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
         No hay eventos
       </h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        Empieza creando un nuevo evento.
+        Empezá creando un nuevo evento.
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>

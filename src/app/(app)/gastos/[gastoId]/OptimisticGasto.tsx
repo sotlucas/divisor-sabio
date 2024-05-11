@@ -43,7 +43,7 @@ export default function OptimisticGasto({
       <div className="flex justify-between items-end mb-4">
         <h1 className="font-semibold text-2xl">{optimisticGasto.nombre}</h1>
         <Button className="" onClick={() => setOpen(true)}>
-          Edit
+          Editar
         </Button>
       </div>
       <pre
