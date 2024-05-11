@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
 
 import { type Action, cn } from "@/lib/utils";
-import { type TAddOptimistic } from "@/app/(app)/eventos/useOptimisticEventos";
+import { type TAddOptimistic } from "@/app/(app)/gastos/useOptimisticGastos";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,43 +22,54 @@ import {
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+
+import { type Gasto, insertGastoParams } from "@/lib/db/schema/gastos";
+import {
+  createGastoAction,
+  deleteGastoAction,
+  updateGastoAction,
+} from "@/lib/actions/gastos";
+import { type Evento, type EventoId } from "@/lib/db/schema/eventos";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { es } from "date-fns/locale";
 
-import { type Evento, insertEventoParams } from "@/lib/db/schema/eventos";
-import {
-  createEventoAction,
-  deleteEventoAction,
-  updateEventoAction,
-} from "@/lib/actions/eventos";
-import { Textarea } from "../ui/textarea";
-
-const EventoForm = ({
-  evento,
+const GastoForm = ({
+  eventos,
+  eventoId,
+  gasto,
   openModal,
   closeModal,
   addOptimistic,
   postSuccess,
 }: {
-  evento?: Evento | null;
-  openModal?: (evento?: Evento) => void;
+  gasto?: Gasto | null;
+  eventos: Evento[];
+  eventoId?: EventoId;
+  openModal?: (gasto?: Gasto) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
   postSuccess?: () => void;
 }) => {
   const { errors, hasErrors, setErrors, handleChange } =
-    useValidatedForm<Evento>(insertEventoParams);
-  const editing = !!evento?.id;
-  const [fechaInicio, setFechaInicio] = useState<any>(evento?.fechaInicio);
+    useValidatedForm<Gasto>(insertGastoParams);
+  const editing = !!gasto?.id;
+  const [fecha, setFecha] = useState<Date | undefined>(gasto?.fecha);
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [pending, startMutation] = useTransition();
 
   const router = useRouter();
-  const backpath = useBackPath("eventos");
+  const backpath = useBackPath("gastos");
 
   const onSuccess = (
     action: Action,
-    data?: { error: string; values: Evento }
+    data?: { error: string; values: Gasto }
   ) => {
     const failed = Boolean(data?.error);
     if (failed) {
@@ -69,9 +80,8 @@ const EventoForm = ({
     } else {
       router.refresh();
       postSuccess && postSuccess();
-      if (action === "create") toast.success("Evento creado!");
-      if (action === "update") toast.success("Evento actualizado!");
-      if (action === "delete") router.push(backpath);
+      if (action === "create") toast.success("Gasto creado!");
+      if (action === "update") toast.success("Gasto actualizado!");
     }
   };
 
@@ -79,38 +89,38 @@ const EventoForm = ({
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
-    const eventoParsed = await insertEventoParams.safeParseAsync({
+    const gastoParsed = await insertGastoParams.safeParseAsync({
+      eventoId,
       ...payload,
     });
-    if (!eventoParsed.success) {
-      setErrors(eventoParsed?.error.flatten().fieldErrors);
+    if (!gastoParsed.success) {
+      setErrors(gastoParsed?.error.flatten().fieldErrors);
       return;
     }
 
     closeModal && closeModal();
-    const values = eventoParsed.data;
-    const pendingEvento: Evento = {
-      updatedAt: evento?.updatedAt ?? new Date(),
-      createdAt: evento?.createdAt ?? new Date(),
-      id: evento?.id ?? "",
-      userId: evento?.userId ?? "",
+    const values = gastoParsed.data;
+    const pendingGasto: Gasto = {
+      updatedAt: gasto?.updatedAt ?? new Date(),
+      createdAt: gasto?.createdAt ?? new Date(),
+      id: gasto?.id ?? "",
       ...values,
     };
     try {
       startMutation(async () => {
         addOptimistic &&
           addOptimistic({
-            data: pendingEvento,
+            data: pendingGasto,
             action: editing ? "update" : "create",
           });
 
         const error = editing
-          ? await updateEventoAction({ ...values, id: evento.id })
-          : await createEventoAction(values);
+          ? await updateGastoAction({ ...values, id: gasto.id })
+          : await createGastoAction(values);
 
         const errorFormatted = {
           error: error ?? "Error",
-          values: pendingEvento,
+          values: pendingGasto,
         };
         onSuccess(
           editing ? "update" : "create",
@@ -139,9 +149,10 @@ const EventoForm = ({
         <Input
           type="text"
           name="nombre"
-          placeholder="Asado"
+          placeholder="Carne"
           className={cn(errors?.nombre ? "ring ring-destructive" : "")}
-          defaultValue={evento?.nombre ?? ""}
+          defaultValue={gasto?.nombre ?? ""}
+          required
         />
         {errors?.nombre ? (
           <p className="text-xs text-destructive mt-2">{errors.nombre[0]}</p>
@@ -153,21 +164,24 @@ const EventoForm = ({
         <Label
           className={cn(
             "mb-2 inline-block",
-            errors?.descripcion ? "text-destructive" : ""
+            errors?.monto ? "text-destructive" : ""
           )}
         >
-          Descripción
+          Monto
         </Label>
-        <Textarea
-          name="descripcion"
-          placeholder="Descripción del evento..."
-          className={cn(errors?.descripcion ? "ring ring-destructive" : "")}
-          defaultValue={evento?.descripcion ?? ""}
-        />
-        {errors?.descripcion ? (
-          <p className="text-xs text-destructive mt-2">
-            {errors.descripcion[0]}
-          </p>
+        <div className="flex items-baseline gap-2">
+          <span>$</span>
+          <Input
+            type="text"
+            name="monto"
+            placeholder="0.00"
+            className={cn(errors?.monto ? "ring ring-destructive" : "")}
+            defaultValue={gasto?.monto ?? ""}
+            required
+          />
+        </div>
+        {errors?.monto ? (
+          <p className="text-xs text-destructive mt-2">{errors.monto[0]}</p>
         ) : (
           <div className="h-6" />
         )}
@@ -176,19 +190,20 @@ const EventoForm = ({
         <Label
           className={cn(
             "mb-2 inline-block",
-            errors?.fechaInicio ? "text-destructive" : ""
+            errors?.fecha ? "text-destructive" : ""
           )}
         >
-          Fecha Inicio
+          Fecha
         </Label>
         <br />
         <Popover>
           <Input
-            name="fechaInicio"
+            name="fecha"
             onChange={() => {}}
             readOnly
-            value={fechaInicio?.toUTCString() ?? new Date().toUTCString()}
+            value={fecha?.toUTCString() ?? new Date().toUTCString()}
             className="hidden"
+            required
           />
 
           <PopoverTrigger asChild>
@@ -196,11 +211,11 @@ const EventoForm = ({
               variant={"outline"}
               className={cn(
                 "w-[240px] pl-3 text-left font-normal",
-                !evento?.fechaInicio && "text-muted-foreground"
+                !gasto?.fecha && "text-muted-foreground"
               )}
             >
-              {fechaInicio ? (
-                <span>{format(fechaInicio, "PPP", { locale: es })}</span>
+              {fecha ? (
+                <span>{format(fecha, "PPP", { locale: es })}</span>
               ) : (
                 <span>Elegir una fecha</span>
               )}
@@ -210,21 +225,54 @@ const EventoForm = ({
           <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               mode="single"
-              onSelect={(e) => setFechaInicio(e)}
-              selected={fechaInicio}
+              onSelect={(e) => setFecha(e)}
+              selected={fecha}
               initialFocus
               locale={es}
             />
           </PopoverContent>
         </Popover>
-        {errors?.fechaInicio ? (
-          <p className="text-xs text-destructive mt-2">
-            {errors.fechaInicio[0]}
-          </p>
+        {errors?.fecha ? (
+          <p className="text-xs text-destructive mt-2">{errors.fecha[0]}</p>
         ) : (
           <div className="h-6" />
         )}
       </div>
+
+      {eventoId ? null : (
+        <div>
+          <Label
+            className={cn(
+              "mb-2 inline-block",
+              errors?.eventoId ? "text-destructive" : ""
+            )}
+          >
+            Evento
+          </Label>
+          <Select defaultValue={gasto?.eventoId} name="eventoId">
+            <SelectTrigger
+              className={cn(errors?.eventoId ? "ring ring-destructive" : "")}
+            >
+              <SelectValue placeholder="Select a evento" />
+            </SelectTrigger>
+            <SelectContent>
+              {eventos?.map((evento) => (
+                <SelectItem key={evento.id} value={evento.id.toString()}>
+                  {evento.id}
+                  {/* TODO: Replace with a field from the evento model */}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors?.eventoId ? (
+            <p className="text-xs text-destructive mt-2">
+              {errors.eventoId[0]}
+            </p>
+          ) : (
+            <div className="h-6" />
+          )}
+        </div>
+      )}
       {/* Schema fields end */}
 
       {/* Save Button */}
@@ -240,13 +288,12 @@ const EventoForm = ({
             setIsDeleting(true);
             closeModal && closeModal();
             startMutation(async () => {
-              addOptimistic &&
-                addOptimistic({ action: "delete", data: evento });
-              const error = await deleteEventoAction(evento.id);
+              addOptimistic && addOptimistic({ action: "delete", data: gasto });
+              const error = await deleteGastoAction(gasto.id);
               setIsDeleting(false);
               const errorFormatted = {
                 error: error ?? "Error",
-                values: evento,
+                values: gasto,
               };
 
               onSuccess("delete", error ? errorFormatted : undefined);
@@ -260,7 +307,7 @@ const EventoForm = ({
   );
 };
 
-export default EventoForm;
+export default GastoForm;
 
 const SaveButton = ({
   editing,

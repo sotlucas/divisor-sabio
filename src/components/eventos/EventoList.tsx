@@ -8,7 +8,7 @@ import { useOptimisticEventos } from "@/app/(app)/eventos/useOptimisticEventos";
 import { Button } from "@/components/ui/button";
 import EventoForm from "./EventoForm";
 import { PlusIcon } from "lucide-react";
-import { DataTable } from "./DataTable";
+import { DataTable } from "../shared/DataTable";
 import { columns } from "./columns";
 
 type TOpenModal = (evento?: Evento) => void;
@@ -29,7 +29,7 @@ export default function EventoList({ eventos }: { eventos: CompleteEvento[] }) {
       <Modal
         open={open}
         setOpen={setOpen}
-        title={activeEvento ? "Editar Evento" : "Crear Evento"}
+        title={activeEvento ? "Editar evento" : "Crear evento"}
       >
         <EventoForm
           evento={activeEvento}
@@ -39,8 +39,8 @@ export default function EventoList({ eventos }: { eventos: CompleteEvento[] }) {
         />
       </Modal>
       <div className="absolute right-0 top-0 ">
-        <Button onClick={() => openModal()} variant={"outline"}>
-          +
+        <Button onClick={() => openModal()} variant="default" size="icon">
+          <PlusIcon className="w-4 h-4" />
         </Button>
       </div>
       {optimisticEventos.length === 0 ? (
@@ -59,7 +59,7 @@ const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
         No hay eventos
       </h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        Empieza creando un nuevo evento.
+        Empezá creando un nuevo evento.
       </p>
       <div className="mt-6">
         <Button onClick={() => openModal()}>

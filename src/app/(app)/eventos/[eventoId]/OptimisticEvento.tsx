@@ -33,7 +33,7 @@ export default function OptimisticEvento({ evento }: { evento: Evento }) {
       </Modal>
       <div className="flex justify-between items-end mb-4">
         <h1 className="font-semibold text-2xl">{optimisticEvento.nombre}</h1>
-        <Button className="" onClick={() => setOpen(true)}>
+        <Button variant="outline" onClick={() => setOpen(true)}>
           Editar
         </Button>
       </div>

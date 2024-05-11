@@ -30,13 +30,13 @@ export const columns: ColumnDef<CompleteEvento>[] = [
     accessorKey: "fechaInicio",
     header: "Fecha",
     cell: ({ row }) => {
-      return format(row.original.fechaInicio as any, "MM/dd/yyyy");
+      return format(row.original.fechaInicio as any, "dd/MM/yyyy");
     },
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      return <Actions row={row}/>
+      return <Actions row={row} />;
     },
   },
 ];
@@ -64,4 +64,3 @@ function Actions({ row }: any) {
     </DropdownMenu>
   );
 }
-
