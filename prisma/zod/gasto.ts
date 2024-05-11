@@ -1,0 +1,25 @@
+import * as z from "zod"
+import { CompleteEvento, relatedEventoSchema } from "./index"
+
+export const gastoSchema = z.object({
+  id: z.string(),
+  monto: z.number(),
+  nombre: z.string(),
+  fecha: z.date(),
+  eventoId: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
+
+export interface CompleteGasto extends z.infer<typeof gastoSchema> {
+  evento: CompleteEvento
+}
+
+/**
+ * relatedGastoSchema contains all relations on your model in addition to the scalars
+ *
+ * NOTE: Lazy required in case of potential circular dependencies within schema
+ */
+export const relatedGastoSchema: z.ZodSchema<CompleteGasto> = z.lazy(() => gastoSchema.extend({
+  evento: relatedEventoSchema,
+}))

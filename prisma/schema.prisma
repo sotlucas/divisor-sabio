@@ -16,8 +16,8 @@ generator zod {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DATABASE_URL_NON_POOLING")
 }
 
@@ -44,4 +44,17 @@ model Evento {
   userId      String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  gastos      Gasto[]
+}
+
+model Gasto {
+  id       String   @id @default(cuid())
+  monto    Float
+  nombre   String
+  fecha    DateTime
+  evento   Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+  eventoId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
