@@ -11,6 +11,7 @@ import Modal from "../shared/Modal";
 import GastoForm from "./GastoForm";
 import { useOptimistic, useState } from "react";
 import { TAddOptimistic } from "@/app/(app)/gastos/useOptimisticGastos";
+import { es } from "date-fns/locale";
 
 export const columns: ColumnDef<CompleteGasto>[] = [
   {
@@ -21,14 +22,14 @@ export const columns: ColumnDef<CompleteGasto>[] = [
     accessorKey: "monto",
     header: "Monto",
     cell: ({ row }) => {
-      return `$ ${row.original.monto}`;
+      return `$ ${row.original.monto.toFixed(2)}`;
     },
   },
   {
     accessorKey: "fecha",
     header: "Fecha",
     cell: ({ row }) => {
-      return format(row.original.fecha as any, "MM/dd/yyyy");
+      return format(row.original.fecha as any, "dd/MM/yyyy");
     },
   },
   {
