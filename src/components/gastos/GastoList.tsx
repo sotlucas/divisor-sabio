@@ -12,6 +12,8 @@ import { useOptimisticGastos } from "@/app/(app)/gastos/useOptimisticGastos";
 import { Button } from "@/components/ui/button";
 import GastoForm from "./GastoForm";
 import { PlusIcon } from "lucide-react";
+import { columns } from "./columns";
+import { DataTable } from "../shared/DataTable";
 
 type TOpenModal = (gasto?: Gasto) => void;
 
@@ -37,11 +39,11 @@ export default function GastoList({
   const closeModal = () => setOpen(false);
 
   return (
-    <div>
+    <div className="mt-5">
       <Modal
         open={open}
         setOpen={setOpen}
-        title={activeGasto ? "Editar Gasto" : "Crear Gasto"}
+        title={activeGasto ? "Editar gasto" : "Crear gasto"}
       >
         <GastoForm
           gasto={activeGasto}
@@ -52,19 +54,15 @@ export default function GastoList({
           eventoId={eventoId}
         />
       </Modal>
-      <div className="absolute right-0 top-0 ">
-        <Button onClick={() => openModal()} variant={"outline"}>
-          +
+      <div className="absolute right-0 top-0">
+        <Button size="icon" variant="default" onClick={() => openModal()}>
+          <PlusIcon className="w-4 h-4" />
         </Button>
       </div>
       {optimisticGastos.length === 0 ? (
         <EmptyState openModal={openModal} />
       ) : (
-        <ul>
-          {optimisticGastos.map((gasto) => (
-            <Gasto gasto={gasto} key={gasto.id} openModal={openModal} />
-          ))}
-        </ul>
+        <DataTable columns={columns} data={optimisticGastos} />
       )}
     </div>
   );

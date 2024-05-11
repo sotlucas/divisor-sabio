@@ -30,6 +30,7 @@ import {
   deleteEventoAction,
   updateEventoAction,
 } from "@/lib/actions/eventos";
+import { Textarea } from "../ui/textarea";
 
 const EventoForm = ({
   evento,
@@ -124,7 +125,7 @@ const EventoForm = ({
   };
 
   return (
-    <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
+    <form action={handleSubmit} onChange={handleChange}>
       {/* Schema fields start */}
       <div>
         <Label
@@ -138,6 +139,7 @@ const EventoForm = ({
         <Input
           type="text"
           name="nombre"
+          placeholder="Asado"
           className={cn(errors?.nombre ? "ring ring-destructive" : "")}
           defaultValue={evento?.nombre ?? ""}
         />
@@ -156,9 +158,9 @@ const EventoForm = ({
         >
           Descripción
         </Label>
-        <Input
-          type="text"
+        <Textarea
           name="descripcion"
+          placeholder="Descripción del evento..."
           className={cn(errors?.descripcion ? "ring ring-destructive" : "")}
           defaultValue={evento?.descripcion ?? ""}
         />
