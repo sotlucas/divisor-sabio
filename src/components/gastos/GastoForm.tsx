@@ -82,7 +82,6 @@ const GastoForm = ({
       postSuccess && postSuccess();
       if (action === "create") toast.success("Gasto creado!");
       if (action === "update") toast.success("Gasto actualizado!");
-      if (action === "delete") router.push(backpath);
     }
   };
 
@@ -136,29 +135,8 @@ const GastoForm = ({
   };
 
   return (
-    <form action={handleSubmit} onChange={handleChange} className={"space-y-8"}>
+    <form action={handleSubmit} onChange={handleChange}>
       {/* Schema fields start */}
-      <div>
-        <Label
-          className={cn(
-            "mb-2 inline-block",
-            errors?.monto ? "text-destructive" : ""
-          )}
-        >
-          Monto
-        </Label>
-        <Input
-          type="text"
-          name="monto"
-          className={cn(errors?.monto ? "ring ring-destructive" : "")}
-          defaultValue={gasto?.monto ?? ""}
-        />
-        {errors?.monto ? (
-          <p className="text-xs text-destructive mt-2">{errors.monto[0]}</p>
-        ) : (
-          <div className="h-6" />
-        )}
-      </div>
       <div>
         <Label
           className={cn(
@@ -171,11 +149,39 @@ const GastoForm = ({
         <Input
           type="text"
           name="nombre"
+          placeholder="Carne"
           className={cn(errors?.nombre ? "ring ring-destructive" : "")}
           defaultValue={gasto?.nombre ?? ""}
+          required
         />
         {errors?.nombre ? (
           <p className="text-xs text-destructive mt-2">{errors.nombre[0]}</p>
+        ) : (
+          <div className="h-6" />
+        )}
+      </div>
+      <div>
+        <Label
+          className={cn(
+            "mb-2 inline-block",
+            errors?.monto ? "text-destructive" : ""
+          )}
+        >
+          Monto
+        </Label>
+        <div className="flex items-baseline gap-2">
+          <span>$</span>
+          <Input
+            type="text"
+            name="monto"
+            placeholder="0.00"
+            className={cn(errors?.monto ? "ring ring-destructive" : "")}
+            defaultValue={gasto?.monto ?? ""}
+            required
+          />
+        </div>
+        {errors?.monto ? (
+          <p className="text-xs text-destructive mt-2">{errors.monto[0]}</p>
         ) : (
           <div className="h-6" />
         )}
@@ -197,6 +203,7 @@ const GastoForm = ({
             readOnly
             value={fecha?.toUTCString() ?? new Date().toUTCString()}
             className="hidden"
+            required
           />
 
           <PopoverTrigger asChild>
