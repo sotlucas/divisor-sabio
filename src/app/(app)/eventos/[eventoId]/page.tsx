@@ -1,13 +1,14 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 
-import { getEventoByIdWithGastos } from "@/lib/api/eventos/queries";
+import { getEventoByIdWithGastos, getParticipanteByEventoId as getParticipanteByEventoId } from "@/lib/api/eventos/queries";
 import OptimisticEvento from "./OptimisticEvento";
 import { checkAuth } from "@/lib/auth/utils";
 import GastoList from "@/components/gastos/GastoList";
 
 import { BackButton } from "@/components/shared/BackButton";
 import Loading from "@/app/loading";
+import OptimisticParticipantes from "./OptimisticParticipantes";
 
 export const revalidate = 0;
 
@@ -27,6 +28,7 @@ const Evento = async ({ id }: { id: string }) => {
   await checkAuth();
 
   const { evento, gastos } = await getEventoByIdWithGastos(id);
+  const { participantes } = await getParticipanteByEventoId(id);
 
   if (!evento) notFound();
   return (
@@ -34,6 +36,9 @@ const Evento = async ({ id }: { id: string }) => {
       <div className="relative">
         <BackButton currentResource="eventos" />
         <OptimisticEvento evento={evento} />
+      </div>
+      <div className="relative">
+        <OptimisticParticipantes participantes={participantes} />
       </div>
       <div className="relative mt-8 mx-4">
         <h3 className="text-xl font-medium mb-4">Gastos</h3>
