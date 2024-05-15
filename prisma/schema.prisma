@@ -27,6 +27,7 @@ model User {
   hashedPassword String
   name           String?
   sessions       Session[]
+  eventos        Evento[]
 }
 
 model Session {
@@ -45,6 +46,7 @@ model Evento {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   gastos      Gasto[]
+  participantes User[] 
 }
 
 model Gasto {

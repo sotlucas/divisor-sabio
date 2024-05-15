@@ -1,5 +1,5 @@
 import * as z from "zod"
-import { CompleteGasto, relatedGastoSchema } from "./index"
+import { CompleteGasto, relatedGastoSchema, CompleteUser, relatedUserSchema } from "./index"
 
 export const eventoSchema = z.object({
   id: z.string(),
@@ -13,6 +13,7 @@ export const eventoSchema = z.object({
 
 export interface CompleteEvento extends z.infer<typeof eventoSchema> {
   gastos: CompleteGasto[]
+  participantes: CompleteUser[]
 }
 
 /**
@@ -22,4 +23,5 @@ export interface CompleteEvento extends z.infer<typeof eventoSchema> {
  */
 export const relatedEventoSchema: z.ZodSchema<CompleteEvento> = z.lazy(() => eventoSchema.extend({
   gastos: relatedGastoSchema.array(),
+  participantes: relatedUserSchema.array(),
 }))
