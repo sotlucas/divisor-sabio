@@ -73,6 +73,7 @@ export async function signUpAction(
     await db.user.create({
       data: {
         id: userId,
+        name: data.name,
         email: data.email,
         hashedPassword,
       },

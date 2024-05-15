@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const authenticationSchema = z.object({
+  name: z.string().max(31),
   email: z.string().email().min(5).max(31),
   password: z
     .string()
@@ -13,4 +14,4 @@ export const updateUserSchema = z.object({
   email: z.string().min(4).optional(),
 });
 
-export type UsernameAndPassword = z.infer<typeof authenticationSchema>;
+export type NameEmailAndPassword = z.infer<typeof authenticationSchema>;

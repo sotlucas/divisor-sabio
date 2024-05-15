@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { type Cookie } from "lucia";
 
 import { validateRequest } from "./lucia";
-import { UsernameAndPassword, authenticationSchema } from "../db/schema/auth";
+import { NameEmailAndPassword, authenticationSchema } from "../db/schema/auth";
 
 export type AuthSession = {
   session: {
@@ -51,11 +51,12 @@ const getErrorMessage = (errors: any): string => {
 export const validateAuthFormData = (
   formData: FormData
 ):
-  | { data: UsernameAndPassword; error: null }
+  | { data: NameEmailAndPassword; error: null }
   | { data: null; error: string } => {
+  const name = formData.get("name");
   const email = formData.get("email");
   const password = formData.get("password");
-  const result = authenticationSchema.safeParse({ email, password });
+  const result = authenticationSchema.safeParse({ name, email, password });
 
   if (!result.success) {
     return {

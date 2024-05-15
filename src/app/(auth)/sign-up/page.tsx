@@ -21,6 +21,11 @@ export default function SignUpPage() {
       <h1 className="text-2xl font-bold text-center">Creá tu cuenta</h1>
       <AuthFormError state={state} />
       <form action={formAction}>
+        <Label htmlFor="name" className="text-muted-foreground">
+          Nombre
+        </Label>
+        <Input name="name" type="name" id="name" required />
+        <br />
         <Label htmlFor="email" className="text-muted-foreground">
           Email
         </Label>
