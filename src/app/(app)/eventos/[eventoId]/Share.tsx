@@ -19,7 +19,6 @@ export const Share = () => {
   }, []);
 
   const url = `${currentUrl}/invite`;
-  console.log("url", url);
 
   const copyLink = () => {
     navigator.clipboard.writeText(url);
