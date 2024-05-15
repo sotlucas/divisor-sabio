@@ -46,3 +46,22 @@ export const getEventoByIdWithGastos = async (id: EventoId) => {
 
   return { evento, gastos: gastos };
 };
+
+// Returns only name and email of the user
+export const getParticipanteByEventoId = async (id: EventoId) => {
+  const { id: eventoId } = eventoIdSchema.parse({ id });
+  const participantes = await db.user.findMany({
+    where: {
+      eventos: {
+        some: {
+          id: eventoId,
+        },
+      },
+    },
+    select: {
+      name: true,
+      email: true,
+    },
+  });
+  return { participantes };
+}
