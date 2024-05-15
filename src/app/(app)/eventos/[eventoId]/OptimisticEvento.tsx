@@ -3,13 +3,13 @@
 import { useOptimistic, useState } from "react";
 import { TAddOptimistic } from "@/app/(app)/eventos/useOptimisticEventos";
 import { type Evento } from "@/lib/db/schema/eventos";
-import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/shared/Modal";
 import EventoForm from "@/components/eventos/EventoForm";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { Share } from "./Share";
 
 export default function OptimisticEvento({ evento }: { evento: Evento }) {
   const [open, setOpen] = useState(false);
@@ -33,10 +33,14 @@ export default function OptimisticEvento({ evento }: { evento: Evento }) {
       </Modal>
       <div className="flex justify-between items-end mb-4">
         <h1 className="font-semibold text-2xl">{optimisticEvento.nombre}</h1>
-        <Button variant="outline" onClick={() => setOpen(true)}>
-          Editar
-        </Button>
+        <div className="flex space-x-2">
+          <Button variant="outline" onClick={() => setOpen(true)}>
+            Editar
+          </Button>
+          <Share />
+        </div>
       </div>
+
       <div className="my-2">
         <span className="font-bold">Descripción: </span>
         <span>{optimisticEvento.descripcion}</span>
