@@ -142,6 +142,7 @@ const EventoForm = ({
           placeholder="Asado"
           className={cn(errors?.nombre ? "ring ring-destructive" : "")}
           defaultValue={evento?.nombre ?? ""}
+          required={true}
         />
         {errors?.nombre ? (
           <p className="text-xs text-destructive mt-2">{errors.nombre[0]}</p>
