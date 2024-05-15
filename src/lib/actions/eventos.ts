@@ -5,6 +5,7 @@ import {
   createEvento,
   deleteEvento,
   updateEvento,
+  addParticipant,
 } from "@/lib/api/eventos/mutations";
 import {
   EventoId,
@@ -42,6 +43,14 @@ export const updateEventoAction = async (input: UpdateEventoParams) => {
     const payload = updateEventoParams.parse(input);
     await updateEvento(payload.id, payload);
     revalidateEventos();
+  } catch (e) {
+    return handleErrors(e);
+  }
+};
+
+export const addParticipantAction = async (eventoId: EventoId) => {
+  try {
+    await addParticipant(eventoId);
   } catch (e) {
     return handleErrors(e);
   }
