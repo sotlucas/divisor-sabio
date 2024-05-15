@@ -17,7 +17,7 @@ const Sidebar = async () => {
         <div className="space-y-4">
           <div>
             <Link href="/dashboard">
-            <Image src={`/divisor_sabio.png`} className="ml-4" height="50" width="50" alt="El pensador rodeado de dos D y S doradas" />
+              <Image src={`/divisor_sabio.png`} className="ml-4" height="50" width="50" alt="El pensador rodeado de dos D y S doradas" />
             </Link>
             <p className="text-lg font-semibold ml-4">Divisor Sabio</p>
           </div>
@@ -50,9 +50,9 @@ const UserDetails = ({ session }: { session: AuthSession }) => {
           <AvatarFallback className="border-border border-2 text-muted-foreground">
             {user.name
               ? user.name
-                  ?.split(" ")
-                  .map((word) => word[0].toUpperCase())
-                  .join("")
+                ?.split(" ")
+                .map((word) => word[0].toUpperCase())
+                .join("")
               : "~"}
           </AvatarFallback>
         </Avatar>
