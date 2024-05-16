@@ -15,6 +15,9 @@ export default function Navbar() {
   return (
     <div className="md:hidden border-b mb-4 pb-2 w-full">
       <nav className="flex justify-between w-full items-center">
+        <div className="flex">
+          <img src={`/divisor_sabio.png`} className="ml-4" height="40" width="40" alt="El pensador rodeado de dos D y S doradas" />
+        </div>
         <div className="font-semibold text-lg">Divisor Sabio</div>
         <Button variant="ghost" onClick={() => setOpen(!open)}>
           <AlignRight />
