@@ -37,7 +37,7 @@ const Evento = async ({ id }: { id: string }) => {
         <BackButton currentResource="eventos" />
         <OptimisticEvento evento={evento} />
       </div>
-      <div className="relative">
+      <div className="flex justify-end">
         <OptimisticParticipantes participantes={participantes} />
       </div>
       <div className="relative mt-8 mx-4">
