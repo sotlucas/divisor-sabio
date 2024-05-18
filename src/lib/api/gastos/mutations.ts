@@ -36,8 +36,23 @@ export const createGasto = async (gasto: NewGastoParams) => {
 export const updateGasto = async (id: GastoId, gasto: UpdateGastoParams) => {
   const { id: gastoId } = gastoIdSchema.parse({ id });
   const newGasto = updateGastoSchema.parse(gasto);
+  const gastoWithDeudas = await db.gasto.findFirst({
+    where: { id: gastoId },
+    include: { deudas: true },
+  });
   try {
-    const g = await db.gasto.update({ where: { id: gastoId }, data: newGasto });
+    const g = await db.gasto.update({
+      where: { id: gastoId },
+      data: {
+        ...newGasto,
+        deudas: {
+          updateMany: gastoWithDeudas?.deudas.map((deuda) => ({
+            where: { id: deuda.id },
+            data: { monto: newGasto.monto / gastoWithDeudas?.deudas.length },
+          })),
+        },
+      },
+    });
     return { gasto: g };
   } catch (err) {
     const message = (err as Error).message ?? "Error, please try again";
