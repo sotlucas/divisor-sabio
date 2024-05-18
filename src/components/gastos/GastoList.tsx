@@ -1,10 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 
-import { cn } from "@/lib/utils";
 import { type Gasto, CompleteGasto } from "@/lib/db/schema/gastos";
 import Modal from "@/components/shared/Modal";
 import { type Evento, type EventoId } from "@/lib/db/schema/eventos";
@@ -67,39 +64,6 @@ export default function GastoList({
     </div>
   );
 }
-
-const Gasto = ({
-  gasto,
-  openModal,
-}: {
-  gasto: CompleteGasto;
-  openModal: TOpenModal;
-}) => {
-  const optimistic = gasto.id === "optimistic";
-  const deleting = gasto.id === "delete";
-  const mutating = optimistic || deleting;
-  const pathname = usePathname();
-  const basePath = pathname.includes("gastos")
-    ? pathname
-    : pathname + "/gastos/";
-
-  return (
-    <li
-      className={cn(
-        "flex justify-between my-2",
-        mutating ? "opacity-30 animate-pulse" : "",
-        deleting ? "text-destructive" : ""
-      )}
-    >
-      <div className="w-full">
-        <div>{gasto.nombre}</div>
-      </div>
-      <Button variant={"link"} asChild>
-        <Link href={basePath + "/" + gasto.id}>Editar</Link>
-      </Button>
-    </li>
-  );
-};
 
 const EmptyState = ({ openModal }: { openModal: TOpenModal }) => {
   return (

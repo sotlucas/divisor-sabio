@@ -6,6 +6,7 @@ import {
   deleteEvento,
   updateEvento,
   addParticipant,
+  deleteParticipant,
 } from "@/lib/api/eventos/mutations";
 import {
   EventoId,
@@ -27,6 +28,7 @@ const handleErrors = (e: unknown) => {
 };
 
 const revalidateEventos = () => revalidatePath("/eventos");
+const revalidateParticipantes = () => revalidatePath("/participantes");
 
 export const createEventoAction = async (input: NewEventoParams) => {
   try {
@@ -51,6 +53,18 @@ export const updateEventoAction = async (input: UpdateEventoParams) => {
 export const addParticipantAction = async (eventoId: EventoId) => {
   try {
     await addParticipant(eventoId);
+  } catch (e) {
+    return handleErrors(e);
+  }
+};
+
+export const deleteParticipantAction = async (
+  eventoId: EventoId,
+  participantId: string
+) => {
+  try {
+    await deleteParticipant(eventoId, participantId);
+    revalidateParticipantes();
   } catch (e) {
     return handleErrors(e);
   }
