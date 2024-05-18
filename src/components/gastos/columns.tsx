@@ -10,8 +10,7 @@ import { CompleteGasto, Gasto } from "@/lib/db/schema/gastos";
 import Modal from "../shared/Modal";
 import GastoForm from "./GastoForm";
 import { useOptimistic, useState } from "react";
-import { TAddOptimistic } from "@/app/(app)/gastos/useOptimisticGastos";
-import { es } from "date-fns/locale";
+import { TAddOptimistic } from "@/app/(app)/eventos/[eventoId]/useOptimisticGastos";
 
 export const columns: ColumnDef<CompleteGasto>[] = [
   {

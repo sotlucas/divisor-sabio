@@ -5,7 +5,7 @@ import { useState } from "react";
 import { type Gasto, CompleteGasto } from "@/lib/db/schema/gastos";
 import Modal from "@/components/shared/Modal";
 import { type Evento, type EventoId } from "@/lib/db/schema/eventos";
-import { useOptimisticGastos } from "@/app/(app)/gastos/useOptimisticGastos";
+import { useOptimisticGastos } from "@/app/(app)/eventos/[eventoId]/useOptimisticGastos";
 import { Button } from "@/components/ui/button";
 import GastoForm from "./GastoForm";
 import { PlusIcon } from "lucide-react";
