@@ -45,7 +45,7 @@ export const createColumns = (
       cell: ({ row }) => {
         const deudas = (row.original as any).deudas;
         return deudas
-          .map((deuda: any) => {
+          ?.map((deuda: any) => {
             return deuda.deudor.name;
           })
           .join(", ");
