@@ -1,8 +1,7 @@
 import { checkAuth } from "@/lib/auth/utils";
 import { Toaster } from "@/components/ui/sonner";
-import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
-export default async function AppLayout({
+
+export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
@@ -11,9 +10,7 @@ export default async function AppLayout({
   return (
     <main>
       <div className="flex h-screen">
-        <Sidebar />
-        <main className="flex-1 md:p-8 pt-2 p-8 overflow-y-auto">
-          <Navbar />
+        <main className="flex flex-1 md:p-8 pt-2 p-8 overflow-y-auto items-center justify-center">
           {children}
         </main>
       </div>

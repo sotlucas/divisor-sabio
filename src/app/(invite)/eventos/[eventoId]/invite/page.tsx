@@ -9,7 +9,7 @@ import { OptimisticInvite } from "./OptimisticInvite";
 
 export const revalidate = 0;
 
-export default async function EventoPage({
+export default async function InvitePage({
   params,
 }: {
   params: { eventoId: string };
@@ -25,6 +25,7 @@ const Invite = async ({ id }: { id: string }) => {
   await checkAuth();
 
   const { evento } = await getEventoById(id);
+  console.log("evento", evento);
 
   if (!evento) notFound();
 
