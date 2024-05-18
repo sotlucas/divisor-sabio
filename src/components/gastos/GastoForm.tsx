@@ -247,9 +247,9 @@ const GastoForm = ({
         >
           Pagado por
         </Label>
-        <Select defaultValue={gasto?.eventoId} name="pagadorId">
+        <Select defaultValue={gasto?.pagadorId} name="pagadorId">
           <SelectTrigger
-            className={cn(errors?.eventoId ? "ring ring-destructive" : "")}
+            className={cn(errors?.pagadorId ? "ring ring-destructive" : "")}
           >
             <SelectValue placeholder="Seleccionar participante" />
           </SelectTrigger>

@@ -40,7 +40,12 @@ export const getEventoByIdWithGastos = async (id: EventoId) => {
       },
     },
     include: {
-      gastos: { include: { evento: true } },
+      gastos: {
+        include: {
+          evento: true,
+          pagador: { select: { id: true, name: true, email: true } },
+        },
+      },
       participantes: { select: { id: true, name: true, email: true } },
     },
   });
