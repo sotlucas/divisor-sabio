@@ -28,6 +28,8 @@ model User {
   name           String?
   sessions       Session[]
   eventos        Evento[]
+  gastos         Gasto[]
+  deudas         Deuda[]
 }
 
 model Session {
@@ -38,24 +40,39 @@ model Session {
 }
 
 model Evento {
-  id          String    @id @default(cuid())
-  nombre      String
-  descripcion String?
-  fechaInicio DateTime?
-  userId      String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  gastos      Gasto[]
-  participantes User[] 
+  id            String    @id @default(cuid())
+  nombre        String
+  descripcion   String?
+  fechaInicio   DateTime?
+  userId        String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  gastos        Gasto[]
+  participantes User[]
 }
 
 model Gasto {
-  id       String   @id @default(cuid())
+  id        String   @id @default(cuid())
+  monto     Float
+  nombre    String
+  fecha     DateTime
+  evento    Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+  eventoId  String
+  pagador   User     @relation(fields: [pagadorId], references: [id])
+  pagadorId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deudas    Deuda[]
+}
+
+model Deuda {
+  id       String @id @default(cuid())
+  deudor   User   @relation(fields: [deudorId], references: [id])
+  deudorId String
+  gasto    Gasto  @relation(fields: [gastoId], references: [id])
+  gastoId  String
   monto    Float
-  nombre   String
-  fecha    DateTime
-  evento   Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
-  eventoId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
