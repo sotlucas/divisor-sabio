@@ -70,7 +70,7 @@ model Deuda {
   id       String @id @default(cuid())
   deudor   User   @relation(fields: [deudorId], references: [id])
   deudorId String
-  gasto    Gasto  @relation(fields: [gastoId], references: [id])
+  gasto    Gasto  @relation(fields: [gastoId], references: [id], onDelete: Cascade)
   gastoId  String
   monto    Float
 

@@ -91,6 +91,8 @@ const GastoForm = ({
     const payload = Object.fromEntries(data.entries());
     const gastoParsed = await insertGastoParams.safeParseAsync({
       eventoId,
+      deudoresIds: participantes?.map((p) => p.id) ?? [],
+      pagadorId: payload.pagadorId ?? gasto?.pagadorId,
       ...payload,
     });
     if (!gastoParsed.success) {
@@ -247,7 +249,11 @@ const GastoForm = ({
         >
           Pagado por
         </Label>
-        <Select defaultValue={gasto?.pagadorId} name="pagadorId">
+        <Select
+          defaultValue={gasto?.pagadorId}
+          name="pagadorId"
+          disabled={editing}
+        >
           <SelectTrigger
             className={cn(errors?.pagadorId ? "ring ring-destructive" : "")}
           >
