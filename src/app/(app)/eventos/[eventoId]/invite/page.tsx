@@ -25,7 +25,6 @@ const Invite = async ({ id }: { id: string }) => {
   await checkAuth();
 
   const { evento } = await getEventoById(id);
-  console.log("evento", evento);
 
   if (!evento) notFound();
 

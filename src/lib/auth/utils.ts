@@ -48,7 +48,7 @@ const getErrorMessage = (errors: any): string => {
   return ""; // return a default error message or an empty string
 };
 
-export const validateAuthFormData = (
+export const validateAuthSignUpFormData = (
   formData: FormData
 ):
   | { data: NameEmailAndPassword; error: null }
@@ -57,6 +57,25 @@ export const validateAuthFormData = (
   const email = formData.get("email");
   const password = formData.get("password");
   const result = authenticationSchema.safeParse({ name, email, password });
+
+  if (!result.success) {
+    return {
+      data: null,
+      error: getErrorMessage(result.error.flatten().fieldErrors),
+    };
+  }
+
+  return { data: result.data, error: null };
+};
+
+export const validateAuthSignInFormData = (
+  formData: FormData
+):
+  | { data: NameEmailAndPassword; error: null }
+  | { data: null; error: string } => {
+  const email = formData.get("email");
+  const password = formData.get("password");
+  const result = authenticationSchema.safeParse({ email, password });
 
   if (!result.success) {
     return {

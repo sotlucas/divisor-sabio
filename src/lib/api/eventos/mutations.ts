@@ -48,6 +48,27 @@ export const addParticipant = async (id: EventoId) => {
   }
 };
 
+export const deleteParticipant = async (
+  eventoId: EventoId,
+  participantId: string
+) => {
+  const { session } = await getUserAuth();
+  const { id: eventoIdParsed } = eventoIdSchema.parse({ id: eventoId });
+  try {
+    const e = await db.evento.update({
+      data: {
+        participantes: { disconnect: { id: participantId } },
+      },
+      where: { id: eventoIdParsed },
+    });
+    return { evento: e };
+  } catch (err) {
+    const message = (err as Error).message ?? "Error, please try again";
+    console.error(message);
+    throw { error: message };
+  }
+};
+
 export const updateEvento = async (
   id: EventoId,
   evento: UpdateEventoParams
