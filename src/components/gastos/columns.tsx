@@ -31,7 +31,6 @@ export const createColumns = (
       accessorKey: "fecha",
       header: "Fecha",
       cell: ({ row }) => {
-        console.log("row.original", row.original);
         return format(row.original.fecha as any, "dd/MM/yyyy");
       },
     },
