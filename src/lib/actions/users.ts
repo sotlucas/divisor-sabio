@@ -11,8 +11,9 @@ import { lucia, validateRequest } from "../auth/lucia";
 import {
   genericError,
   setAuthCookie,
-  validateAuthFormData,
   getUserAuth,
+  validateAuthSignUpFormData,
+  validateAuthSignInFormData,
 } from "../auth/utils";
 
 import { updateUserSchema } from "../db/schema/auth";
@@ -25,7 +26,7 @@ export async function signInAction(
   _: ActionResult,
   formData: FormData
 ): Promise<ActionResult> {
-  const { data, error } = validateAuthFormData(formData);
+  const { data, error } = validateAuthSignInFormData(formData);
   if (error !== null) return { error };
 
   try {
@@ -62,7 +63,7 @@ export async function signUpAction(
   _: ActionResult,
   formData: FormData
 ): Promise<ActionResult> {
-  const { data, error } = validateAuthFormData(formData);
+  const { data, error } = validateAuthSignUpFormData(formData);
 
   if (error !== null) return { error };
 

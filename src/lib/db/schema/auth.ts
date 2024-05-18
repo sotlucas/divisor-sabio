@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const authenticationSchema = z.object({
-  name: z.string().max(31),
+  name: z.string().max(31).optional(),
   email: z.string().email().min(5).max(31),
   password: z
     .string()
