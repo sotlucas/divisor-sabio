@@ -40,7 +40,7 @@ import {
 import { es } from "date-fns/locale";
 
 const GastoForm = ({
-  eventos,
+  participantes,
   eventoId,
   gasto,
   openModal,
@@ -48,8 +48,8 @@ const GastoForm = ({
   addOptimistic,
   postSuccess,
 }: {
+  participantes?: any[];
   gasto?: Gasto | null;
-  eventos: Evento[];
   eventoId?: EventoId;
   openModal?: (gasto?: Gasto) => void;
   closeModal?: () => void;
@@ -238,41 +238,38 @@ const GastoForm = ({
           <div className="h-6" />
         )}
       </div>
-
-      {eventoId ? null : (
-        <div>
-          <Label
-            className={cn(
-              "mb-2 inline-block",
-              errors?.eventoId ? "text-destructive" : ""
-            )}
-          >
-            Evento
-          </Label>
-          <Select defaultValue={gasto?.eventoId} name="eventoId">
-            <SelectTrigger
-              className={cn(errors?.eventoId ? "ring ring-destructive" : "")}
-            >
-              <SelectValue placeholder="Select a evento" />
-            </SelectTrigger>
-            <SelectContent>
-              {eventos?.map((evento) => (
-                <SelectItem key={evento.id} value={evento.id.toString()}>
-                  {evento.id}
-                  {/* TODO: Replace with a field from the evento model */}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {errors?.eventoId ? (
-            <p className="text-xs text-destructive mt-2">
-              {errors.eventoId[0]}
-            </p>
-          ) : (
-            <div className="h-6" />
+      <div>
+        <Label
+          className={cn(
+            "mb-2 inline-block",
+            errors?.pagadorId ? "text-destructive" : ""
           )}
-        </div>
-      )}
+        >
+          Pagado por
+        </Label>
+        <Select defaultValue={gasto?.eventoId} name="pagadorId">
+          <SelectTrigger
+            className={cn(errors?.eventoId ? "ring ring-destructive" : "")}
+          >
+            <SelectValue placeholder="Seleccionar participante" />
+          </SelectTrigger>
+          <SelectContent>
+            {participantes?.map((participante) => (
+              <SelectItem
+                key={participante.id}
+                value={participante.id.toString()}
+              >
+                {participante.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors?.pagadorId ? (
+          <p className="text-xs text-destructive mt-2">{errors.pagadorId[0]}</p>
+        ) : (
+          <div className="h-6" />
+        )}
+      </div>
       {/* Schema fields end */}
 
       {/* Save Button */}

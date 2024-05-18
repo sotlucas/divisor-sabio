@@ -54,7 +54,6 @@ function Actions({ row }: any) {
       <Modal open={open} setOpen={setOpen} title="Editar gasto">
         <GastoForm
           gasto={optimisticGasto}
-          eventos={[]}
           eventoId={row.original.eventoId}
           closeModal={closeModal}
           openModal={openModal}

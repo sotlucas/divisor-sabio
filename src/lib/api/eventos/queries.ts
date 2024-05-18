@@ -39,29 +39,13 @@ export const getEventoByIdWithGastos = async (id: EventoId) => {
         },
       },
     },
-    include: { gastos: { include: { evento: true } } },
+    include: {
+      gastos: { include: { evento: true } },
+      participantes: { select: { id: true, name: true, email: true } },
+    },
   });
   if (e === null) return { evento: null };
-  const { gastos, ...evento } = e;
+  const { gastos, participantes, ...evento } = e;
 
-  return { evento, gastos: gastos };
-};
-
-export const getParticipanteByEventoId = async (id: EventoId) => {
-  const { id: eventoId } = eventoIdSchema.parse({ id });
-  const participantes = await db.user.findMany({
-    where: {
-      eventos: {
-        some: {
-          id: eventoId,
-        },
-      },
-    },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-    },
-  });
-  return { participantes };
+  return { evento, participantes, gastos: gastos };
 };

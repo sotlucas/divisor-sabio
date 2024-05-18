@@ -15,10 +15,12 @@ import { DataTable } from "../shared/DataTable";
 type TOpenModal = (gasto?: Gasto) => void;
 
 export default function GastoList({
+  participantes,
   gastos,
   eventos,
   eventoId,
 }: {
+  participantes: any[];
   gastos: CompleteGasto[];
   eventos: Evento[];
   eventoId?: EventoId;
@@ -43,11 +45,11 @@ export default function GastoList({
         title={activeGasto ? "Editar gasto" : "Crear gasto"}
       >
         <GastoForm
+          participantes={participantes}
           gasto={activeGasto}
           addOptimistic={addOptimisticGasto}
           openModal={openModal}
           closeModal={closeModal}
-          eventos={eventos}
           eventoId={eventoId}
         />
       </Modal>
