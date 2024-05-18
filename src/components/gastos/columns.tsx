@@ -40,6 +40,18 @@ export const createColumns = (
       header: "Pagado por",
     },
     {
+      accessorKey: "deudas",
+      header: "Deudores",
+      cell: ({ row }) => {
+        const deudas = (row.original as any).deudas;
+        return deudas
+          .map((deuda: any) => {
+            return deuda.deudor.name;
+          })
+          .join(", ");
+      },
+    },
+    {
       id: "actions",
       cell: ({ row }) => {
         return <Actions row={row} participantes={participantes} />;

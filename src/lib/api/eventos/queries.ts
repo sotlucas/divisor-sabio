@@ -44,6 +44,11 @@ export const getEventoByIdWithGastos = async (id: EventoId) => {
         include: {
           evento: true,
           pagador: { select: { id: true, name: true, email: true } },
+          deudas: {
+            include: {
+              deudor: { select: { id: true, name: true, email: true } },
+            },
+          },
         },
       },
       participantes: { select: { id: true, name: true, email: true } },
