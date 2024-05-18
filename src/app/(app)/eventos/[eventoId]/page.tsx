@@ -1,10 +1,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 
-import {
-  getEventoByIdWithGastos,
-  getParticipanteByEventoId as getParticipanteByEventoId,
-} from "@/lib/api/eventos/queries";
+import { getEventoByIdWithGastos } from "@/lib/api/eventos/queries";
 import OptimisticEvento from "./OptimisticEvento";
 import { checkAuth } from "@/lib/auth/utils";
 import GastoList from "@/components/gastos/GastoList";
@@ -30,8 +27,7 @@ export default async function EventoPage({
 const Evento = async ({ id }: { id: string }) => {
   await checkAuth();
 
-  const { evento, gastos } = await getEventoByIdWithGastos(id);
-  const { participantes } = await getParticipanteByEventoId(id);
+  const { evento, gastos, participantes } = await getEventoByIdWithGastos(id);
 
   if (!evento) notFound();
   return (
@@ -48,7 +44,12 @@ const Evento = async ({ id }: { id: string }) => {
       </div>
       <div className="relative mt-8 mx-4">
         <h3 className="text-xl font-medium mb-4">Gastos</h3>
-        <GastoList eventos={[]} eventoId={evento.id} gastos={gastos} />
+        <GastoList
+          participantes={participantes}
+          eventos={[]}
+          eventoId={evento.id}
+          gastos={gastos}
+        />
       </div>
     </Suspense>
   );

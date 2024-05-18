@@ -12,34 +12,54 @@ import GastoForm from "./GastoForm";
 import { useOptimistic, useState } from "react";
 import { TAddOptimistic } from "@/app/(app)/eventos/[eventoId]/useOptimisticGastos";
 
-export const columns: ColumnDef<CompleteGasto>[] = [
-  {
-    accessorKey: "nombre",
-    header: "Nombre",
-  },
-  {
-    accessorKey: "monto",
-    header: "Monto",
-    cell: ({ row }) => {
-      return `$ ${row.original.monto.toFixed(2)}`;
+export const createColumns = (
+  participantes: any[]
+): ColumnDef<CompleteGasto>[] => {
+  return [
+    {
+      accessorKey: "nombre",
+      header: "Nombre",
     },
-  },
-  {
-    accessorKey: "fecha",
-    header: "Fecha",
-    cell: ({ row }) => {
-      return format(row.original.fecha as any, "dd/MM/yyyy");
+    {
+      accessorKey: "monto",
+      header: "Monto",
+      cell: ({ row }) => {
+        return `$ ${row.original.monto.toFixed(2)}`;
+      },
     },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      return <Actions row={row} />;
+    {
+      accessorKey: "fecha",
+      header: "Fecha",
+      cell: ({ row }) => {
+        return format(row.original.fecha as any, "dd/MM/yyyy");
+      },
     },
-  },
-];
+    {
+      accessorKey: "pagador.name",
+      header: "Pagado por",
+    },
+    {
+      accessorKey: "deudas",
+      header: "Deudores",
+      cell: ({ row }) => {
+        const deudas = (row.original as any).deudas;
+        return deudas
+          ?.map((deuda: any) => {
+            return deuda.deudor.name;
+          })
+          .join(", ");
+      },
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        return <Actions row={row} participantes={participantes} />;
+      },
+    },
+  ];
+};
 
-function Actions({ row }: any) {
+function Actions({ row, participantes }: any) {
   const [open, setOpen] = useState(false);
   const openModal = (_?: Gasto) => {
     setOpen(true);
@@ -53,8 +73,8 @@ function Actions({ row }: any) {
     <div className="flex space-x-2">
       <Modal open={open} setOpen={setOpen} title="Editar gasto">
         <GastoForm
+          participantes={participantes}
           gasto={optimisticGasto}
-          eventos={[]}
           eventoId={row.original.eventoId}
           closeModal={closeModal}
           openModal={openModal}

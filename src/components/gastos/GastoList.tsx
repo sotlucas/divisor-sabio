@@ -9,16 +9,18 @@ import { useOptimisticGastos } from "@/app/(app)/eventos/[eventoId]/useOptimisti
 import { Button } from "@/components/ui/button";
 import GastoForm from "./GastoForm";
 import { PlusIcon } from "lucide-react";
-import { columns } from "./columns";
+import { createColumns } from "./columns";
 import { DataTable } from "../shared/DataTable";
 
 type TOpenModal = (gasto?: Gasto) => void;
 
 export default function GastoList({
+  participantes,
   gastos,
   eventos,
   eventoId,
 }: {
+  participantes: any[];
   gastos: CompleteGasto[];
   eventos: Evento[];
   eventoId?: EventoId;
@@ -43,11 +45,11 @@ export default function GastoList({
         title={activeGasto ? "Editar gasto" : "Crear gasto"}
       >
         <GastoForm
+          participantes={participantes}
           gasto={activeGasto}
           addOptimistic={addOptimisticGasto}
           openModal={openModal}
           closeModal={closeModal}
-          eventos={eventos}
           eventoId={eventoId}
         />
       </Modal>
@@ -59,7 +61,10 @@ export default function GastoList({
       {optimisticGastos.length === 0 ? (
         <EmptyState openModal={openModal} />
       ) : (
-        <DataTable columns={columns} data={optimisticGastos} />
+        <DataTable
+          columns={createColumns(participantes)}
+          data={optimisticGastos}
+        />
       )}
     </div>
   );
