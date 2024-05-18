@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 
 import { getEventoById } from "@/lib/api/eventos/queries";
-import { checkAuth } from "@/lib/auth/utils";
+import { AuthSession, checkAuth, getUserAuth } from "@/lib/auth/utils";
 
 import Loading from "@/app/loading";
 import { OptimisticInvite } from "./OptimisticInvite";
@@ -14,14 +14,21 @@ export default async function InvitePage({
 }: {
   params: { eventoId: string };
 }) {
+  const { session } = await getUserAuth();
   return (
     <main className="overflow-auto">
-      <Invite id={params.eventoId} />
+      <Invite id={params.eventoId} session={session} />
     </main>
   );
 }
 
-const Invite = async ({ id }: { id: string }) => {
+const Invite = async ({
+  id,
+  session,
+}: {
+  id: string;
+  session: AuthSession["session"];
+}) => {
   await checkAuth();
 
   const { evento } = await getEventoById(id);
@@ -32,7 +39,7 @@ const Invite = async ({ id }: { id: string }) => {
   return (
     <Suspense fallback={<Loading />}>
       <div className="relative">
-        <OptimisticInvite evento={evento} />
+        <OptimisticInvite evento={evento} session={session} />
       </div>
     </Suspense>
   );
