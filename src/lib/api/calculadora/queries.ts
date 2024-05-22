@@ -2,7 +2,7 @@ import { db } from "@/lib/db/index";
 import { getUserAuth } from "@/lib/auth/utils";
 import { Evento, type EventoId, eventoIdSchema } from "@/lib/db/schema/eventos";
 
-interface Balance {
+export interface Balance {
   nombre: string;
   balance: number;
 }
