@@ -64,7 +64,6 @@ const Deudas = async ({ id }: { id: string }) => {
   const { balances } = await getBalancesByEvento(id);
   const { deudas } = calcularDeudas(balances);
 
-
   if (!evento) notFound();
   return (
     <div className="relative mt-8">
