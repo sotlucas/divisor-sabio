@@ -18,7 +18,13 @@ export default function SignInPage() {
 
   return (
     <main className="max-w-lg mx-auto my-4 bg-popover p-10">
-      <h1 className="text-2xl font-bold text-center">Ingresá a tu cuenta</h1>
+      <div className="text-2xl font-bold text-center">
+        <img className="img-center" src="/divisor_sabio.png" style={{margin: "auto"}} alt="logo divisor sabio" />
+        <h1 className="text-2xl font-bold text-center">Bienvenido a Divisor Sabio</h1>
+        <p>No te gastes calculando gastos</p>
+      </div>
+      <br />
+      <h3 className="text-2xl font-bold text-center">Ingresá a tu cuenta</h3>
       <AuthFormError state={state} />
       <form action={formAction}>
         <Label htmlFor="email" className="text-muted-foreground">
