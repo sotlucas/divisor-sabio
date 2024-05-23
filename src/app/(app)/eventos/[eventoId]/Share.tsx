@@ -14,7 +14,8 @@ export const Share = () => {
   useEffect(() => {
     // Check if the code is running on the client side
     if (process) {
-      setCurrentUrl(window.location.href);
+      const url = window.location.href.split('/').slice(0,-1).join('/')
+      setCurrentUrl(url);
     }
   }, []);
 
