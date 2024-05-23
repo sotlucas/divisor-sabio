@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { getEventoByIdWithGastos } from "@/lib/api/eventos/queries";
-import { checkAuth } from "@/lib/auth/utils";
+import { checkAuth, getUserAuth } from "@/lib/auth/utils";
 import GastoList from "@/components/gastos/GastoList";
 
 export const revalidate = 0;
@@ -20,6 +20,7 @@ export default async function GastosPage({
 
 const Gastos = async ({ id }: { id: string }) => {
   await checkAuth();
+  const {session} = await getUserAuth()
 
   const { evento, gastos, participantes } = await getEventoByIdWithGastos(id);
 
@@ -30,8 +31,9 @@ const Gastos = async ({ id }: { id: string }) => {
       <GastoList
         participantes={participantes}
         eventos={[]}
-        eventoId={evento.id}
+        evento={evento}
         gastos={gastos}
+        sessionUserId={session?.user.id!}
       />
     </div>
   );

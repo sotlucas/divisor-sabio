@@ -11,6 +11,7 @@ import { Evento } from "@/lib/db/schema/eventos";
 export default function OptimisticParticipantes({
   participantes,
   evento,
+  isOwner
 }: {
   participantes: {
     id: string;
@@ -18,13 +19,14 @@ export default function OptimisticParticipantes({
     email: string;
   }[];
   evento: Evento;
+  isOwner: Boolean;
 }) {
   const [open, setOpen] = useState(false);
 
   return (
     <div className="m-4">
       <Modal open={open} setOpen={setOpen} title="Participantes">
-        <ParticipanteList participantes={participantes} evento={evento} />
+        <ParticipanteList participantes={participantes} evento={evento} isOwner={isOwner} />
       </Modal>
       <Button variant="outline" onClick={() => setOpen(true)}>
         Participantes
