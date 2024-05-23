@@ -25,14 +25,15 @@ export default function UpdateEmailCard({ email }: { email: string }) {
       params={{
         header: "Your Email",
         description:
-          "Please enter the email address you want to use with your account.",
+          "Por favor ingrese la casilla de email que usara con esta cuenta.",
+          //original: "Please enter the email address you want to use with your account.",
       }}
     >
       <form action={formAction}>
         <AccountCardBody>
           <Input defaultValue={email ?? ""} name="email" />
         </AccountCardBody>
-        <AccountCardFooter description="We will email vou to verify the change.">
+        <AccountCardFooter description="Le enviaremos un email para verificar el cambio.">
           <Submit />
         </AccountCardFooter>
       </form>
@@ -42,6 +43,6 @@ export default function UpdateEmailCard({ email }: { email: string }) {
 
 const Submit = () => {
   const { pending } = useFormStatus();
-  return <Button disabled={pending}>Update Email</Button>;
+  return <Button disabled={pending}>Actualizar Email</Button>;
 };
 

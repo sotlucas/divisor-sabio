@@ -7,13 +7,12 @@ export default function Page() {
   const { setTheme } = useTheme();
   return (
     <div>
-      <h1 className="text-2xl font-semibold">Settings</h1>
+      <h1 className="text-2xl font-semibold">Configuracion</h1>
       <div className="space-y-4 my-4">
         <div>
-          <h3 className="text-lg font-medium">Appearance</h3>
+          <h3 className="text-lg font-medium">Tema</h3>
           <p className="text-sm text-muted-foreground">
-            Customize the appearance of the app. Automatically switch between
-            day and night themes.
+            Personalice el tema de la app. Cambie inmediatamente entre tema claro y oscuro.
           </p>
         </div>
         <Button

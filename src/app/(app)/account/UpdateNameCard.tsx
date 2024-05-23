@@ -23,16 +23,17 @@ export default function UpdateNameCard({ name }: { name: string }) {
   return (
     <AccountCard
       params={{
-        header: "Your Name",
+        header: "Su Nombre",
         description:
-          "Please enter your full name, or a display name you are comfortable with.",
+          "Por favor, ingrese su nombre completo, o cualquier alias con el que se sienta comodo.",
+          //original: "Please enter your full name, or a display name you are comfortable with.",
       }}
     >
       <form action={formAction}>
         <AccountCardBody>
-          <Input defaultValue={name ?? ""} name="name" />
+          <Input defaultValue={name ?? ""} name="Nombre" />
         </AccountCardBody>
-        <AccountCardFooter description="64 characters maximum">
+        <AccountCardFooter description="Maximo 64 caracteres">
           <Submit />
         </AccountCardFooter>
       </form>
@@ -42,5 +43,5 @@ export default function UpdateNameCard({ name }: { name: string }) {
 
 const Submit = () => {
   const { pending } = useFormStatus();
-  return <Button disabled={pending}>Update Name</Button>;
+  return <Button disabled={pending}>Actualizar Nombre</Button>;
 };
