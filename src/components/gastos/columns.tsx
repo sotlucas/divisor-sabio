@@ -13,7 +13,9 @@ import { useOptimistic, useState } from "react";
 import { TAddOptimistic } from "@/app/(app)/eventos/[eventoId]/useOptimisticGastos";
 
 export const createColumns = (
-  participantes: any[]
+  participantes: any[],
+  sessionUserId: string,
+  isOwner: Boolean
 ): ColumnDef<CompleteGasto>[] => {
   return [
     {
@@ -53,7 +55,8 @@ export const createColumns = (
     {
       id: "actions",
       cell: ({ row }) => {
-        return <Actions row={row} participantes={participantes} />;
+        if (sessionUserId !== row.original.pagadorId && !isOwner) return null
+        return <Actions row={row} participantes={participantes}/>;
       },
     },
   ];

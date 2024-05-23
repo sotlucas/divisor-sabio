@@ -7,6 +7,7 @@ import {
   insertGastoSchema,
   gastoIdSchema,
 } from "@/lib/db/schema/gastos";
+import { getUserAuth } from "@/lib/auth/utils";
 
 export const createGasto = async (gasto: NewGastoParams) => {
   const newGasto = insertGastoSchema.parse(gasto);
@@ -34,6 +35,7 @@ export const createGasto = async (gasto: NewGastoParams) => {
 };
 
 export const updateGasto = async (id: GastoId, gasto: UpdateGastoParams) => {
+  const { session } = await getUserAuth();
   const { id: gastoId } = gastoIdSchema.parse({ id });
   const newGasto = updateGastoSchema.parse(gasto);
   const gastoWithDeudas = await db.gasto.findFirst({
@@ -42,7 +44,7 @@ export const updateGasto = async (id: GastoId, gasto: UpdateGastoParams) => {
   });
   try {
     const g = await db.gasto.update({
-      where: { id: gastoId },
+      where: { id: gastoId, pagadorId: session?.user.id },
       data: {
         ...newGasto,
         deudas: {
@@ -62,9 +64,10 @@ export const updateGasto = async (id: GastoId, gasto: UpdateGastoParams) => {
 };
 
 export const deleteGasto = async (id: GastoId) => {
+  const { session } = await getUserAuth();
   const { id: gastoId } = gastoIdSchema.parse({ id });
   try {
-    const g = await db.gasto.delete({ where: { id: gastoId } });
+    const g = await db.gasto.delete({ where: { id: gastoId, pagadorId: session?.user.id } });
     return { gasto: g };
   } catch (err) {
     const message = (err as Error).message ?? "Error, please try again";

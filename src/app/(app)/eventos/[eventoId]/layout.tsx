@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { getEventoByIdWithGastos } from "@/lib/api/eventos/queries";
 import OptimisticEvento from "./OptimisticEvento";
-import { checkAuth } from "@/lib/auth/utils";
+import { checkAuth, getUserAuth } from "@/lib/auth/utils";
 
 import Loading from "@/app/loading";
 import OptimisticParticipantes from "./OptimisticParticipantes";
@@ -29,6 +29,7 @@ export default async function EventoPage({
 
 const Evento = async ({ id, children }: { id: string; children: any }) => {
   await checkAuth();
+  const { session } = await getUserAuth();
 
   const { evento, participantes } = await getEventoByIdWithGastos(id);
 
@@ -41,13 +42,16 @@ const Evento = async ({ id, children }: { id: string; children: any }) => {
             <ChevronLeftIcon />
           </Link>
         </Button>
-        <OptimisticEvento evento={evento} />
+        <OptimisticEvento evento={evento}
+          isOwner={session?.user.id == evento.userId}
+        />
       </div>
       <div className="relative ml-4 flex items-center justify-between -mb-5">
         <GroupedTabs eventoId={id} />
         <OptimisticParticipantes
           participantes={participantes}
           evento={evento}
+          isOwner={session?.user.id == evento.userId}
         />
       </div>
       <div className="relative mx-4">{children}</div>

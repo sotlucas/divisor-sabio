@@ -18,12 +18,14 @@ export default function GastoList({
   participantes,
   gastos,
   eventos,
-  eventoId,
+  evento,
+  sessionUserId
 }: {
   participantes: any[];
   gastos: CompleteGasto[];
   eventos: Evento[];
-  eventoId?: EventoId;
+  evento?: Evento;
+  sessionUserId: string;
 }) {
   const { optimisticGastos, addOptimisticGasto } = useOptimisticGastos(
     gastos,
@@ -50,7 +52,7 @@ export default function GastoList({
           addOptimistic={addOptimisticGasto}
           openModal={openModal}
           closeModal={closeModal}
-          eventoId={eventoId}
+          eventoId={evento?.id}
         />
       </Modal>
       <div className="absolute right-0 top-0">
@@ -62,7 +64,7 @@ export default function GastoList({
         <EmptyState openModal={openModal} />
       ) : (
         <DataTable
-          columns={createColumns(participantes)}
+          columns={createColumns(participantes, sessionUserId, evento?.userId == sessionUserId)}
           data={optimisticGastos}
         />
       )}

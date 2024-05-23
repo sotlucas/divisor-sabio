@@ -11,7 +11,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Share } from "./Share";
 
-export default function OptimisticEvento({ evento }: { evento: Evento }) {
+export default function OptimisticEvento({ evento, isOwner }: { evento: Evento , isOwner:Boolean}) {
   const [open, setOpen] = useState(false);
   const openModal = (_?: Evento) => {
     setOpen(true);
@@ -34,9 +34,11 @@ export default function OptimisticEvento({ evento }: { evento: Evento }) {
       <div className="flex justify-between items-end mb-4">
         <h1 className="font-semibold text-2xl">{optimisticEvento.nombre}</h1>
         <div className="flex space-x-2">
+        {isOwner && (
           <Button variant="outline" onClick={() => setOpen(true)}>
             Editar
           </Button>
+          )}
           <Share />
         </div>
       </div>

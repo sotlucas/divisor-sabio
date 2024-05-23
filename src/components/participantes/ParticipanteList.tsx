@@ -15,12 +15,14 @@ import { useOptimisticParticipantes } from "@/app/(app)/eventos/[eventoId]/useOp
 export default function ParticipanteList({
   participantes,
   evento,
+  isOwner
 }: {
   participantes: {
     name: string | null;
     email: string;
   }[];
   evento: Evento;
+  isOwner: Boolean;
 }) {
   const { optimisticParticipantes, addOptimisticParticipantes } =
     useOptimisticParticipantes(participantes);
@@ -39,6 +41,7 @@ export default function ParticipanteList({
           {
             id: "actions",
             cell: ({ row }) => {
+              if (!isOwner) return null
               return (
                 <Actions
                   row={row}
