@@ -20,8 +20,8 @@ export default function SignInPage() {
     <main className="max-w-lg mx-auto my-4 bg-popover p-10">
       <div className="text-2xl font-bold text-center">
         <img className="img-center" src="/divisor_sabio.png" style={{margin: "auto"}} alt="logo divisor sabio" />
-        <h1 className="text-2xl font-bold text-center">Bienvenido a Divisor Sabio,</h1>
-        <p>no te gastes calculando gastos</p>
+        <h1 className="text-2xl font-bold text-center">Bienvenido a Divisor Sabio</h1>
+        <p>No te gastes calculando gastos</p>
       </div>
       <br />
       <h3 className="text-2xl font-bold text-center">Ingresá a tu cuenta</h3>

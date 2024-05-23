@@ -18,7 +18,15 @@ export default function SignUpPage() {
 
   return (
     <main className="max-w-lg mx-auto my-4 bg-popover p-10">
-      <h1 className="text-2xl font-bold text-center">Creá tu cuenta</h1>
+      <div className="text-2xl font-bold text-center">
+        <img className="img-center" src="/divisor_sabio.png" style={{margin: "auto"}} alt="logo divisor sabio" />
+        <p>Preparate para que la gestion de tus eventos no tenga mas discusiones!</p>
+      
+        <h1 className="text-2xl font-bold text-center">Bienvenido a Divisor Sabio</h1>
+      </div>
+      <br />
+      <br />
+      <h3 className="text-2xl font-bold text-center">Creá tu cuenta</h3>
       <AuthFormError state={state} />
       <form action={formAction}>
         <Label htmlFor="name" className="text-muted-foreground">
