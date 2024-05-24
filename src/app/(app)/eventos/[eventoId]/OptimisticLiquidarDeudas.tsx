@@ -33,6 +33,7 @@ export default function OptimisticLiquidarDeudas({ participantes, eventoId
         <DeudaForm
           participantes={participantes}
           eventoId={eventoId}
+          closeModal={() => setOpen(false)}
         />
       </Modal>
       <Button onClick={() => setOpen(true)}>

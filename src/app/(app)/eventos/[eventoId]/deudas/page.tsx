@@ -60,7 +60,7 @@ const calcularDeudas = (balances: Balance[]) => {
 const Deudas = async ({ id }: { id: string }) => {
   await checkAuth();
 
-  const { evento } = await getEventoByIdWithGastos(id);
+  const { evento, participantes } = await getEventoByIdWithGastos(id);
   const { balances } = await getBalancesByEvento(id);
   const { deudas } = calcularDeudas(balances);
 
@@ -68,7 +68,7 @@ const Deudas = async ({ id }: { id: string }) => {
   return (
     <div className="relative mt-8">
       <h3 className="text-xl font-medium mt-8 mb-4">Deudas</h3>
-      <DeudaList deudas={deudas} />
+      <DeudaList deudas={deudas} evento={evento} participantes={participantes} />
     </div>
   );
 };
