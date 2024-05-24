@@ -11,6 +11,9 @@ import { GroupedTabs } from "./GroupedTabs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ChevronLeftIcon } from "lucide-react";
+import OptimisticBalances from "./OptimisticBalances";
+import { getBalancesByEvento } from "@/lib/api/calculadora/queries";
+import OptimisticLiquidarDeudas from "./OptimisticLiquidarDeudas";
 
 export const revalidate = 0;
 
@@ -32,6 +35,7 @@ const Evento = async ({ id, children }: { id: string; children: any }) => {
   const { session } = await getUserAuth();
 
   const { evento, participantes } = await getEventoByIdWithGastos(id);
+  const { balances } = await getBalancesByEvento(id);
 
   if (!evento) notFound();
   return (
@@ -46,15 +50,22 @@ const Evento = async ({ id, children }: { id: string; children: any }) => {
           isOwner={session?.user.id == evento.userId}
         />
       </div>
-      <div className="relative ml-4 flex items-center justify-between -mb-5">
+      <div className="relative mr-4 ml-4 flex items-center justify-between mt-6 -mb-1">
         <GroupedTabs eventoId={id} />
-        <OptimisticParticipantes
-          participantes={participantes}
-          evento={evento}
-          isOwner={session?.user.id == evento.userId}
-        />
+        <div className="flex space-x-2">
+          <OptimisticLiquidarDeudas
+            participantes={participantes}
+            eventoId={evento.id}
+          />
+          <OptimisticBalances balances={balances} />
+          <OptimisticParticipantes
+            participantes={participantes}
+            evento={evento}
+            isOwner={session?.user.id == evento.userId}
+          />
+        </div>
       </div>
       <div className="relative mx-4">{children}</div>
-    </Suspense>
+    </Suspense >
   );
 };

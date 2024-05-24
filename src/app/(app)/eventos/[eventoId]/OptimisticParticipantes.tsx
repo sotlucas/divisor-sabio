@@ -24,13 +24,13 @@ export default function OptimisticParticipantes({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="m-4">
+    <>
       <Modal open={open} setOpen={setOpen} title="Participantes">
         <ParticipanteList participantes={participantes} evento={evento} isOwner={isOwner} />
       </Modal>
       <Button variant="outline" onClick={() => setOpen(true)}>
         Participantes
       </Button>
-    </div>
+    </>
   );
 }

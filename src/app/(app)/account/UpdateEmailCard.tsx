@@ -23,17 +23,17 @@ export default function UpdateEmailCard({ email }: { email: string }) {
   return (
     <AccountCard
       params={{
-        header: "Your Email",
+        header: "Email",
         description:
           "Por favor ingrese la casilla de email que usara con esta cuenta.",
-          //original: "Please enter the email address you want to use with your account.",
+        //original: "Please enter the email address you want to use with your account.",
       }}
     >
       <form action={formAction}>
         <AccountCardBody>
           <Input defaultValue={email ?? ""} name="email" />
         </AccountCardBody>
-        <AccountCardFooter description="Le enviaremos un email para verificar el cambio.">
+        <AccountCardFooter>
           <Submit />
         </AccountCardFooter>
       </form>

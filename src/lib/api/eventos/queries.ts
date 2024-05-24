@@ -50,6 +50,7 @@ export const getEventoByIdWithGastos = async (id: EventoId) => {
             },
           },
         },
+        orderBy: { fecha: "desc" },
       },
       participantes: { select: { id: true, name: true, email: true } },
     },

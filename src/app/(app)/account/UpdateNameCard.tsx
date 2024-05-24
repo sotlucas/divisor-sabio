@@ -23,17 +23,17 @@ export default function UpdateNameCard({ name }: { name: string }) {
   return (
     <AccountCard
       params={{
-        header: "Su Nombre",
+        header: "Nombre",
         description:
           "Por favor, ingrese su nombre completo, o cualquier alias con el que se sienta comodo.",
-          //original: "Please enter your full name, or a display name you are comfortable with.",
+        //original: "Please enter your full name, or a display name you are comfortable with.",
       }}
     >
       <form action={formAction}>
         <AccountCardBody>
           <Input defaultValue={name ?? ""} name="Nombre" />
         </AccountCardBody>
-        <AccountCardFooter description="Maximo 64 caracteres">
+        <AccountCardFooter description="Máximo 64 caracteres">
           <Submit />
         </AccountCardFooter>
       </form>
