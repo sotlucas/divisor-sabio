@@ -7,7 +7,6 @@ type AdditionalLinks = {
 };
 
 export const defaultLinks: SidebarLink[] = [
-  { href: "/dashboard", title: "Perfil", icon: User },
   { href: "/eventos", title: "Eventos", icon: Calendar },
   // { href: "/account", title: "Account", icon: Cog },
   {
