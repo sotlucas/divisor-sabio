@@ -29,14 +29,14 @@ export default function OptimisticLiquidarDeudas({ participantes, eventoId
 
   return (
     <>
-      <Modal open={open} setOpen={setOpen} title="Balances">
+      <Modal open={open} setOpen={setOpen} title="Liquidar deudas">
         <DeudaForm
           participantes={participantes}
           eventoId={eventoId}
         />
       </Modal>
       <Button onClick={() => setOpen(true)}>
-        Liquidar Deudas
+        Liquidar deudas
       </Button>
     </>
   );
