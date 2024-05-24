@@ -39,7 +39,7 @@ export default function OptimisticEvento({ evento, isOwner }: { evento: Evento ,
             Editar
           </Button>
           )}
-          <Share />
+          <Share currentEventId={evento.id}/>
         </div>
       </div>
 
