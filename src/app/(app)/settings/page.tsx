@@ -7,7 +7,7 @@ export default function Page() {
   const { setTheme } = useTheme();
   return (
     <div>
-      <h1 className="text-2xl font-semibold">Configuracion</h1>
+      <h1 className="text-2xl font-semibold">Configuración</h1>
       <div className="space-y-4 my-4">
         <div>
           <h3 className="text-lg font-medium">Tema</h3>
@@ -39,7 +39,7 @@ export default function Page() {
               </div>
             </div>
             <span className="block w-full p-2 text-center font-normal">
-              Light
+              Claro
             </span>
           </div>
         </Button>
@@ -67,7 +67,7 @@ export default function Page() {
               </div>
             </div>
             <span className="block w-full p-2 text-center font-normal">
-              Dark
+              Oscuro
             </span>
           </div>
         </Button>
@@ -95,7 +95,7 @@ export default function Page() {
               </div>
             </div>
             <span className="block w-full p-2 text-center font-normal">
-              System
+              Sistema
             </span>
           </div>
         </Button>

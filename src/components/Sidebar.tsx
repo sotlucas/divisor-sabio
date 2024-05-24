@@ -16,7 +16,7 @@ const Sidebar = async () => {
       <div className="flex flex-col justify-between h-full">
         <div className="space-y-4">
           <div>
-            <Link href="/dashboard">
+            <Link href="/eventos">
               <Image src={`/divisor_sabio.png`} className="ml-4" height="50" width="50" alt="El pensador rodeado de dos D y S doradas" />
             </Link>
             <p className="text-lg font-semibold ml-4">Divisor Sabio</p>
