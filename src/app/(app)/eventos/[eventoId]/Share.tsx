@@ -12,13 +12,10 @@ export const Share = ({currentEventId}: { currentEventId?: string }) => {
   const [eventInviteUrl, setEventInviteUrl] = useState("");
 
   useEffect(() => {
-    const runningInsideBrowser = !!window;
-    if (runningInsideBrowser) {
-      const protocolAndHostname = window.location.origin
-      const inviteUrl = `${protocolAndHostname}/eventos/${currentEventId}/invite`;
+    const protocolAndHostname = window.location.origin;
+    const inviteUrl = `${protocolAndHostname}/eventos/${currentEventId}/invite`;
 
-      setEventInviteUrl(inviteUrl)
-    }
+    setEventInviteUrl(inviteUrl)
   }, []);
 
   const copyLink = () => {
