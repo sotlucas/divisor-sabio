@@ -1,28 +1,28 @@
 "use client";
 
 import Modal from "@/components/shared/Modal";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Check, Copy, Share2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Check, Copy, Share2} from "lucide-react";
+import {useEffect, useState} from "react";
 
-export const Share = () => {
+export const Share = ({currentEventId}: { currentEventId?: string }) => {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
-  const [currentUrl, setCurrentUrl] = useState("");
+  const [eventInviteUrl, setEventInviteUrl] = useState("");
 
   useEffect(() => {
-    // Check if the code is running on the client side
-    if (process) {
-      const url = window.location.href.split('/').slice(0,-1).join('/')
-      setCurrentUrl(url);
+    const runningInsideBrowser = !!window;
+    if (runningInsideBrowser) {
+      const protocolAndHostname = window.location.origin
+      const inviteUrl = `${protocolAndHostname}/eventos/${currentEventId}/invite`;
+
+      setEventInviteUrl(inviteUrl)
     }
   }, []);
 
-  const url = `${currentUrl}/invite`;
-
   const copyLink = () => {
-    navigator.clipboard.writeText(url);
+    navigator.clipboard.writeText(eventInviteUrl);
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
@@ -33,18 +33,18 @@ export const Share = () => {
     <>
       <Modal open={open} setOpen={setOpen} title="Compartir evento">
         <div className="flex w-full items-center space-x-2">
-          <Input value={url} contentEditable={false} />
+          <Input value={eventInviteUrl} contentEditable={false} readOnly={true}/>
           <Button variant="default" size="icon" onClick={copyLink}>
             {copied ? (
-              <Check className="w-4 h-4" />
+              <Check className="w-4 h-4"/>
             ) : (
-              <Copy className="w-4 h-4" />
+              <Copy className="w-4 h-4"/>
             )}
           </Button>
         </div>
       </Modal>
       <Button variant="default" size="icon" onClick={() => setOpen(true)}>
-        <Share2 className="w-4 h-4" />
+        <Share2 className="w-4 h-4"/>
       </Button>
     </>
   );
