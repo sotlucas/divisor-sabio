@@ -67,8 +67,6 @@ const Deudas = async ({ id }: { id: string }) => {
   if (!evento) notFound();
   return (
     <div className="relative mt-8">
-      <h3 className="text-xl font-medium mb-4">Balances</h3>
-      <BalanceList balances={balances} />
       <h3 className="text-xl font-medium mt-8 mb-4">Deudas</h3>
       <DeudaList deudas={deudas} />
     </div>

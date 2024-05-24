@@ -39,7 +39,7 @@ import {
 } from "@/components/ui/select";
 import { es } from "date-fns/locale";
 
-const GastoForm = ({
+const DeudaForm = ({
   participantes,
   eventoId,
   gasto,
@@ -57,7 +57,7 @@ const GastoForm = ({
   postSuccess?: () => void;
 }) => {
   const { errors, hasErrors, setErrors, handleChange } =
-    useValidatedForm<Gasto>(insertGastoParams);
+    useValidatedForm<any>(insertGastoParams); // TODO: fix type
   const editing = !!gasto?.id;
   const [fecha, setFecha] = useState<Date | undefined>(gasto?.fecha);
 
@@ -89,10 +89,13 @@ const GastoForm = ({
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
+
     const gastoParsed = await insertGastoParams.safeParseAsync({
       eventoId,
-      deudoresIds: participantes?.map((p) => p.id) ?? [],
-      pagadorId: payload.pagadorId ?? gasto?.pagadorId,
+      deudoresIds: [payload.receptorId],
+      pagadorId: payload.deudorId,
+      fecha: new Date(),
+      nombre: "Deuda pagada",
       ...payload,
     });
     if (!gastoParsed.success) {
@@ -143,21 +146,68 @@ const GastoForm = ({
         <Label
           className={cn(
             "mb-2 inline-block",
-            errors?.nombre ? "text-destructive" : ""
+            errors?.deudorId ? "text-destructive" : ""
           )}
         >
-          Nombre
+          Deudor
         </Label>
-        <Input
-          type="text"
-          name="nombre"
-          placeholder="Carne"
-          className={cn(errors?.nombre ? "ring ring-destructive" : "")}
-          defaultValue={gasto?.nombre ?? ""}
+        <Select
+          name="deudorId"
           required
-        />
-        {errors?.nombre ? (
-          <p className="text-xs text-destructive mt-2">{errors.nombre[0]}</p>
+        >
+          <SelectTrigger
+            className={cn(errors?.deudorId ? "ring ring-destructive" : "")}
+          >
+            <SelectValue placeholder="Seleccionar participante" />
+          </SelectTrigger>
+          <SelectContent>
+            {participantes?.map((participante) => (
+              <SelectItem
+                key={participante.id}
+                value={participante.id.toString()}
+              >
+                {participante.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors?.deudorId ? (
+          <p className="text-xs text-destructive mt-2">{errors.deudorId[0]}</p>
+        ) : (
+          <div className="h-6" />
+        )}
+      </div>
+      <div>
+        <Label
+          className={cn(
+            "mb-2 inline-block",
+            errors?.receptorId ? "text-destructive" : ""
+          )}
+        >
+          Receptor
+        </Label>
+        <Select
+          name="receptorId"
+          required
+        >
+          <SelectTrigger
+            className={cn(errors?.receptorId ? "ring ring-destructive" : "")}
+          >
+            <SelectValue placeholder="Seleccionar participante" />
+          </SelectTrigger>
+          <SelectContent>
+            {participantes?.map((participante) => (
+              <SelectItem
+                key={participante.id}
+                value={participante.id.toString()}
+              >
+                {participante.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors?.receptorId ? (
+          <p className="text-xs text-destructive mt-2">{errors.receptorId[0]}</p>
         ) : (
           <div className="h-6" />
         )}
@@ -184,95 +234,6 @@ const GastoForm = ({
         </div>
         {errors?.monto ? (
           <p className="text-xs text-destructive mt-2">{errors.monto[0]}</p>
-        ) : (
-          <div className="h-6" />
-        )}
-      </div>
-      <div>
-        <Label
-          className={cn(
-            "mb-2 inline-block",
-            errors?.fecha ? "text-destructive" : ""
-          )}
-        >
-          Fecha
-        </Label>
-        <br />
-        <Popover>
-          <Input
-            name="fecha"
-            onChange={() => { }}
-            readOnly
-            value={fecha?.toUTCString() ?? new Date().toUTCString()}
-            className="hidden"
-            required
-          />
-
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-[240px] pl-3 text-left font-normal",
-                !gasto?.fecha && "text-muted-foreground"
-              )}
-            >
-              {fecha ? (
-                <span>{format(fecha, "PPP", { locale: es })}</span>
-              ) : (
-                <span>Elegir una fecha</span>
-              )}
-              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              onSelect={(e) => setFecha(e)}
-              selected={fecha}
-              initialFocus
-              locale={es}
-            />
-          </PopoverContent>
-        </Popover>
-        {errors?.fecha ? (
-          <p className="text-xs text-destructive mt-2">{errors.fecha[0]}</p>
-        ) : (
-          <div className="h-6" />
-        )}
-      </div>
-      <div>
-        <Label
-          className={cn(
-            "mb-2 inline-block",
-            errors?.pagadorId ? "text-destructive" : ""
-          )}
-        >
-          Pagado por
-        </Label>
-        <Select
-          defaultValue={gasto?.pagadorId}
-          name="pagadorId"
-          disabled={editing}
-          required
-        >
-          <SelectTrigger
-            className={cn(errors?.pagadorId ? "ring ring-destructive" : "")}
-          >
-            <SelectValue placeholder="Seleccionar participante" />
-          </SelectTrigger>
-          <SelectContent>
-            {participantes?.map((participante) => (
-              <SelectItem
-                key={participante.id}
-                value={participante.id.toString()}
-              >
-                {participante.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {errors?.pagadorId ? (
-          <p className="text-xs text-destructive mt-2">{errors.pagadorId[0]}</p>
         ) : (
           <div className="h-6" />
         )}
@@ -311,7 +272,7 @@ const GastoForm = ({
   );
 };
 
-export default GastoForm;
+export default DeudaForm;
 
 const SaveButton = ({
   editing,

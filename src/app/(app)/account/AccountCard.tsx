@@ -31,7 +31,7 @@ export function AccountCardFooter({
   children,
 }: {
   children: React.ReactNode;
-  description: string;
+  description?: string;
 }) {
   return (
     <div
