@@ -23,6 +23,7 @@ export const updateGastoParams = updateGastoSchema.extend({
   monto: z.coerce.number(),
   fecha: z.coerce.date(),
   eventoId: z.coerce.string().min(1),
+  deudoresIds: z.array(z.string()),
 });
 export const gastoIdSchema = baseSchema.pick({ id: true });
 

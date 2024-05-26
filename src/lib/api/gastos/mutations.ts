@@ -1,4 +1,4 @@
-import { db } from "@/lib/db/index";
+import {db} from "@/lib/db/index";
 import {
   GastoId,
   NewGastoParams,
@@ -7,14 +7,14 @@ import {
   insertGastoSchema,
   gastoIdSchema,
 } from "@/lib/db/schema/gastos";
-import { AuthSession, getUserAuth } from "@/lib/auth/utils";
+import {AuthSession,getUserAuth} from "@/lib/auth/utils";
 import { sendEmail } from "@/lib/mail";
 
 export const createGasto = async (gasto: NewGastoParams) => {
   const newGasto = insertGastoSchema.parse(gasto);
 
   const deudas = gasto?.deudoresIds.map((deudorId) => ({
-    deudor: { connect: { id: deudorId } },
+    deudor: {connect: {id: deudorId}},
     monto: newGasto.monto / gasto?.deudoresIds.length,
   }));
 
@@ -51,36 +51,58 @@ export const createGasto = async (gasto: NewGastoParams) => {
   }
 };
 
-export const updateGasto = async (id: GastoId, gasto: UpdateGastoParams) => {
+export const updateGasto = async (id: GastoId, updatedGastoData: UpdateGastoParams) => {
   const { session } = await getUserAuth();
-  const { id: gastoId } = gastoIdSchema.parse({ id });
-  const newGasto = updateGastoSchema.parse(gasto);
-
-  await validateAction(gastoId, session);
-
-  const gastoWithDeudas = await db.gasto.findFirst({
-    where: { id: gastoId },
-    include: { deudas: true },
+  const {id: gastoToUpdateId} = gastoIdSchema.parse({id});
+  const existingGasto = await db.gasto.findFirst({
+    where: {id: gastoToUpdateId},
+    include: {deudas: true},
   });
+
+  await validateAction(gastoToUpdateId, session);
+
+  const updatedGasto = updateGastoSchema.parse(updatedGastoData);
+  const updatedDeudoresIds = updatedGastoData?.deudoresIds;
+
+  const deudasToDelete = existingGasto?.deudas.filter(
+    (existingDeuda) => !updatedDeudoresIds?.includes(existingDeuda.deudorId)
+  );
+
+  const deudasToModify = existingGasto?.deudas.filter(
+    (deuda) => updatedDeudoresIds?.includes(deuda.deudorId)
+  );
+
+  const deudoresIdsForDeudasToCreate = updatedDeudoresIds?.filter(
+    (updatedDeudorId) =>
+      !existingGasto?.deudas.map((deuda) => deuda.deudorId).includes(updatedDeudorId)
+  );
 
   try {
     const g = await db.gasto.update({
-      where: { id: gastoId },
+      where: {id: gastoToUpdateId},
       data: {
-        ...newGasto,
+        ...updatedGasto,
         deudas: {
-          updateMany: gastoWithDeudas?.deudas.map((deuda) => ({
-            where: { id: deuda.id },
-            data: { monto: newGasto.monto / gastoWithDeudas?.deudas.length },
+          // Crear deudas nuevas
+          create: deudoresIdsForDeudasToCreate?.map((deudorId) => ({
+            deudor: {connect: {id: deudorId}},
+            monto: updatedGasto.monto / deudoresIdsForDeudasToCreate?.length,
           })),
+          // Actualizar monto de deudas que ya existen
+          updateMany: deudasToModify?.map((deuda) => ({
+            where: {id: deuda.id},
+            data: {monto: updatedGasto.monto / deudasToModify?.length},
+          })),
+          // Eliminar deudas que ya no existen
+          deleteMany: deudasToDelete?.map((deuda) => ({id: deuda.id})),
         },
       },
     });
-    return { gasto: g };
+    return {gasto: g};
   } catch (err) {
     const message = (err as Error).message ?? "Error, please try again";
     console.error(message);
-    throw { error: message };
+    throw {error: message};
   }
 };
 
