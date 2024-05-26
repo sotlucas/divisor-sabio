@@ -12,7 +12,7 @@ export default async function GastosPage({
   params: { eventoId: string };
 }) {
   return (
-    <main className="overflow-auto">
+    <main>
       <Gastos id={params.eventoId} />
     </main>
   );
@@ -20,7 +20,7 @@ export default async function GastosPage({
 
 const Gastos = async ({ id }: { id: string }) => {
   await checkAuth();
-  const {session} = await getUserAuth()
+  const { session } = await getUserAuth();
 
   const { evento, gastos, participantes } = await getEventoByIdWithGastos(id);
 

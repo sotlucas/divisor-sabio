@@ -46,7 +46,7 @@ export default function EventoList({ eventos }: { eventos: CompleteEvento[] }) {
       {optimisticEventos.length === 0 ? (
         <EmptyState openModal={openModal} />
       ) : (
-        <DataTable columns={columns} data={optimisticEventos} />
+        <DataTable columns={columns} data={optimisticEventos} searchable />
       )}
     </div>
   );
