@@ -4,8 +4,6 @@ import { getEventoByIdWithGastos } from "@/lib/api/eventos/queries";
 import { checkAuth } from "@/lib/auth/utils";
 import DeudaList from "@/components/deudas/DeudaList";
 import { Balance, getBalancesByEvento } from "@/lib/api/calculadora/queries";
-import { log } from "console";
-import BalanceList from "@/components/balances/BalanceList";
 
 export const revalidate = 0;
 
