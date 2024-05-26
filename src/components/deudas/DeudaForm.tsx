@@ -14,22 +14,13 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useBackPath } from "@/components/shared/BackButton";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-
 import { type Gasto, insertGastoParams } from "@/lib/db/schema/gastos";
 import {
   createGastoAction,
   deleteGastoAction,
   updateGastoAction,
 } from "@/lib/actions/gastos";
-import { type Evento, type EventoId } from "@/lib/db/schema/eventos";
+import { type EventoId } from "@/lib/db/schema/eventos";
 import {
   Select,
   SelectContent,
@@ -37,12 +28,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { es } from "date-fns/locale";
 
 const DeudaForm = ({
   participantes,
   eventoId,
   gasto,
+  deudorId,
+  receptorId,
+  monto,
+  liquidatingEntireDeuda,
   openModal,
   closeModal,
   addOptimistic,
@@ -51,6 +45,10 @@ const DeudaForm = ({
   participantes?: any[];
   gasto?: Gasto | null;
   eventoId?: EventoId;
+  deudorId?: string;
+  receptorId?: string;
+  monto?: number;
+  liquidatingEntireDeuda?: boolean;
   openModal?: (gasto?: Gasto) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
@@ -92,11 +90,11 @@ const DeudaForm = ({
 
     const gastoParsed = await insertGastoParams.safeParseAsync({
       eventoId,
-      deudoresIds: [payload.receptorId],
-      pagadorId: payload.deudorId,
+      deudoresIds: [receptorId ?? payload.receptorId],
+      pagadorId: deudorId ?? payload.deudorId,
       fecha: new Date(),
       nombre: "Deuda pagada",
-      ...payload,
+      monto: monto ?? payload.monto,
     });
     if (!gastoParsed.success) {
       setErrors(gastoParsed?.error.flatten().fieldErrors);
@@ -153,6 +151,8 @@ const DeudaForm = ({
         </Label>
         <Select
           name="deudorId"
+          defaultValue={deudorId}
+          disabled={liquidatingEntireDeuda}
           required
         >
           <SelectTrigger
@@ -188,6 +188,8 @@ const DeudaForm = ({
         </Label>
         <Select
           name="receptorId"
+          defaultValue={receptorId}
+          disabled={liquidatingEntireDeuda}
           required
         >
           <SelectTrigger
@@ -207,7 +209,9 @@ const DeudaForm = ({
           </SelectContent>
         </Select>
         {errors?.receptorId ? (
-          <p className="text-xs text-destructive mt-2">{errors.receptorId[0]}</p>
+          <p className="text-xs text-destructive mt-2">
+            {errors.receptorId[0]}
+          </p>
         ) : (
           <div className="h-6" />
         )}
@@ -228,7 +232,8 @@ const DeudaForm = ({
             name="monto"
             placeholder="0.00"
             className={cn(errors?.monto ? "ring ring-destructive" : "")}
-            defaultValue={gasto?.monto ?? ""}
+            defaultValue={monto}
+            disabled={liquidatingEntireDeuda}
             required
           />
         </div>

@@ -46,7 +46,8 @@ const Evento = async ({ id, children }: { id: string; children: any }) => {
             <ChevronLeftIcon />
           </Link>
         </Button>
-        <OptimisticEvento evento={evento}
+        <OptimisticEvento
+          evento={evento}
           isOwner={session?.user.id == evento.userId}
         />
       </div>
@@ -66,6 +67,6 @@ const Evento = async ({ id, children }: { id: string; children: any }) => {
         </div>
       </div>
       <div className="relative mx-4">{children}</div>
-    </Suspense >
+    </Suspense>
   );
 };
