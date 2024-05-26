@@ -24,7 +24,7 @@ export default async function DeudasPage({
 // calculate the minumum number of transactions to settle all debts
 const calcularDeudas = (balances: Balance[]) => {
   // Deep copy balances
-  balances = balances.map(b => ({ ...b }));
+  balances = balances.map((b) => ({ ...b }));
 
   const deudas = balances.filter((b) => b.balance < 0);
   const prestamos = balances.filter((b) => b.balance > 0);
@@ -32,7 +32,11 @@ const calcularDeudas = (balances: Balance[]) => {
   deudas.sort((a, b) => a.balance - b.balance);
   prestamos.sort((a, b) => b.balance - a.balance);
 
-  const transactions: { deudor: string; receptor: string; monto: number }[] = [];
+  const transactions: {
+    deudor: { id: string; nombre: string };
+    receptor: { id: string; nombre: string };
+    monto: number;
+  }[] = [];
 
   let i = 0;
   let j = 0;
@@ -45,8 +49,8 @@ const calcularDeudas = (balances: Balance[]) => {
     prestamo.balance -= amount;
 
     transactions.push({
-      deudor: deuda.nombre,
-      receptor: prestamo.nombre,
+      deudor: { id: deuda.id, nombre: deuda.nombre },
+      receptor: { id: prestamo.id, nombre: prestamo.nombre },
       monto: amount,
     });
 
@@ -55,12 +59,12 @@ const calcularDeudas = (balances: Balance[]) => {
   }
 
   return { deudas: transactions };
-}
+};
 
 const Deudas = async ({ id }: { id: string }) => {
   await checkAuth();
 
-  const { evento } = await getEventoByIdWithGastos(id);
+  const { evento, participantes } = await getEventoByIdWithGastos(id);
   const { balances } = await getBalancesByEvento(id);
   const { deudas } = calcularDeudas(balances);
 
@@ -68,7 +72,11 @@ const Deudas = async ({ id }: { id: string }) => {
   return (
     <div className="relative mt-8">
       <h3 className="text-xl font-medium mt-8 mb-4">Deudas</h3>
-      <DeudaList deudas={deudas} />
+      <DeudaList
+        deudas={deudas}
+        evento={evento}
+        participantes={participantes}
+      />
     </div>
   );
 };
