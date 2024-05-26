@@ -5,7 +5,6 @@ import DeudaForm from "./DeudaForm";
 import { useState } from "react";
 import { CompleteDeuda } from "prisma/zod/deuda";
 import { Receipt } from "lucide-react";
-import { ro } from "date-fns/locale";
 
 export const createColumns = (
   evento: any[],
@@ -13,11 +12,11 @@ export const createColumns = (
 ): ColumnDef<CompleteDeuda>[] => {
   return [
     {
-      accessorKey: "deudor",
+      accessorKey: "deudor.nombre",
       header: "Deudor",
     },
     {
-      accessorKey: "receptor",
+      accessorKey: "receptor.nombre",
       header: "Receptor",
     },
     {
@@ -30,20 +29,18 @@ export const createColumns = (
     {
       id: "actions",
       cell: ({ row }: any) => {
-        return <Actions row={row} evento={evento} participantes={participantes} />;
+        return (
+          <Actions row={row} evento={evento} participantes={participantes} />
+        );
       },
     },
-  ]
-}
-
+  ];
+};
 
 function Actions({ row, evento, participantes }: any) {
   const [open, setOpen] = useState(false);
 
   const { deudor, receptor, monto } = row.original;
-
-  const deudorId = participantes.find((p: { name: any; }) => p.name === deudor)?.id;
-  const receptorId = participantes.find((p: { name: any; }) => p.name === receptor)?.id;
 
   return (
     <div className="flex space-x-2">
@@ -52,10 +49,8 @@ function Actions({ row, evento, participantes }: any) {
           <DeudaForm
             participantes={participantes}
             eventoId={evento.id}
-            deudor={deudor}
-            deudorId={deudorId}
-            receptor={receptor}
-            receptorId={receptorId}
+            deudorId={deudor.id}
+            receptorId={receptor.id}
             monto={monto.toString()}
             liquidatingEntireDeuda={true}
             closeModal={() => setOpen(false)}

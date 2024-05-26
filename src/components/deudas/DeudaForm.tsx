@@ -14,22 +14,13 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useBackPath } from "@/components/shared/BackButton";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-
 import { type Gasto, insertGastoParams } from "@/lib/db/schema/gastos";
 import {
   createGastoAction,
   deleteGastoAction,
   updateGastoAction,
 } from "@/lib/actions/gastos";
-import { type Evento, type EventoId } from "@/lib/db/schema/eventos";
+import { type EventoId } from "@/lib/db/schema/eventos";
 import {
   Select,
   SelectContent,
@@ -37,14 +28,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { es } from "date-fns/locale";
 
 const DeudaForm = ({
   participantes,
   eventoId,
   gasto,
-  deudor,
-  receptor,
   deudorId,
   receptorId,
   monto,
@@ -57,8 +45,6 @@ const DeudaForm = ({
   participantes?: any[];
   gasto?: Gasto | null;
   eventoId?: EventoId;
-  deudor?: string;
-  receptor?: string;
   deudorId?: string;
   receptorId?: string;
   monto?: number;
@@ -223,7 +209,9 @@ const DeudaForm = ({
           </SelectContent>
         </Select>
         {errors?.receptorId ? (
-          <p className="text-xs text-destructive mt-2">{errors.receptorId[0]}</p>
+          <p className="text-xs text-destructive mt-2">
+            {errors.receptorId[0]}
+          </p>
         ) : (
           <div className="h-6" />
         )}
