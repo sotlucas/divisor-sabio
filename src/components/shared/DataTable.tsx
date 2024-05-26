@@ -1,5 +1,7 @@
 "use client";
 
+import { PropsWithChildren, useState } from "react";
+
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -17,8 +19,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
 import { Input } from "../ui/input";
+import { Search } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -30,7 +32,8 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   searchable,
-}: DataTableProps<TData, TValue>) {
+  children,
+}: PropsWithChildren<DataTableProps<TData, TValue>>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
@@ -47,17 +50,21 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       {searchable && (
-        <div className="flex items-center py-4">
-          <Input
-            placeholder="Buscar..."
-            value={
-              (table.getColumn("nombre")?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn("nombre")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+        <div className="flex items-center justify-between pb-4">
+          <div className="relative w-full">
+            <Input
+              placeholder="Buscar..."
+              value={
+                (table.getColumn("nombre")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn("nombre")?.setFilterValue(event.target.value)
+              }
+              className="pl-9 max-w-sm"
+            />
+            <Search className="absolute left-0 top-0 m-3 h-4 w-4 text-muted-foreground" />
+          </div>
+          {children}
         </div>
       )}
       <div className="rounded-md border">
