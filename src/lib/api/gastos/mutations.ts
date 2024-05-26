@@ -8,6 +8,7 @@ import {
   gastoIdSchema,
 } from "@/lib/db/schema/gastos";
 import { getUserAuth } from "@/lib/auth/utils";
+import { sendEmail } from "@/lib/mail";
 
 export const createGasto = async (gasto: NewGastoParams) => {
   const newGasto = insertGastoSchema.parse(gasto);
@@ -25,6 +26,22 @@ export const createGasto = async (gasto: NewGastoParams) => {
           create: deudas,
         },
       },
+      include: {
+        pagador: {
+          select: { name: true },
+        },
+      },
+    });
+
+    const evento = await db.evento.findFirst({
+      where: { id: g.eventoId },
+      include: { participantes: true },
+    });
+    const emails = evento?.participantes.map((p) => p.email) || [];
+    sendEmail({
+      bcc: emails,
+      subject: `Nuevo gasto en ${evento?.nombre}`,
+      html: `${g.pagador.name} creó el gasto ${g.nombre} en el evento ${evento?.nombre} por un monto de $${g.monto}.`,
     });
     return { gasto: g };
   } catch (err) {
@@ -67,7 +84,9 @@ export const deleteGasto = async (id: GastoId) => {
   const { session } = await getUserAuth();
   const { id: gastoId } = gastoIdSchema.parse({ id });
   try {
-    const g = await db.gasto.delete({ where: { id: gastoId, pagadorId: session?.user.id } });
+    const g = await db.gasto.delete({
+      where: { id: gastoId, pagadorId: session?.user.id },
+    });
     return { gasto: g };
   } catch (err) {
     const message = (err as Error).message ?? "Error, please try again";
