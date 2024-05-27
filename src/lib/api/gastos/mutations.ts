@@ -7,7 +7,7 @@ import {
   insertGastoSchema,
   gastoIdSchema,
 } from "@/lib/db/schema/gastos";
-import { getUserAuth } from "@/lib/auth/utils";
+import { AuthSession, getUserAuth } from "@/lib/auth/utils";
 import { sendEmail } from "@/lib/mail";
 
 export const createGasto = async (gasto: NewGastoParams) => {
@@ -55,13 +55,17 @@ export const updateGasto = async (id: GastoId, gasto: UpdateGastoParams) => {
   const { session } = await getUserAuth();
   const { id: gastoId } = gastoIdSchema.parse({ id });
   const newGasto = updateGastoSchema.parse(gasto);
+
+  await validateAction(gastoId, session);
+
   const gastoWithDeudas = await db.gasto.findFirst({
     where: { id: gastoId },
     include: { deudas: true },
   });
+
   try {
     const g = await db.gasto.update({
-      where: { id: gastoId, pagadorId: session?.user.id },
+      where: { id: gastoId },
       data: {
         ...newGasto,
         deudas: {
@@ -83,14 +87,40 @@ export const updateGasto = async (id: GastoId, gasto: UpdateGastoParams) => {
 export const deleteGasto = async (id: GastoId) => {
   const { session } = await getUserAuth();
   const { id: gastoId } = gastoIdSchema.parse({ id });
+
+  await validateAction(gastoId, session);
+
   try {
     const g = await db.gasto.delete({
-      where: { id: gastoId, pagadorId: session?.user.id },
+      where: { id: gastoId },
     });
     return { gasto: g };
   } catch (err) {
     const message = (err as Error).message ?? "Error, please try again";
     console.error(message);
     throw { error: message };
+  }
+};
+
+// Only the owner of the event or the owner of the gasto can delete it
+const validateAction = async (
+  gastoId: string,
+  session: AuthSession["session"]
+) => {
+  const evento = await db.evento.findFirst({
+    where: { gastos: { some: { id: gastoId } } },
+    select: { userId: true },
+  });
+
+  const gasto = await db.gasto.findFirst({
+    where: { id: gastoId },
+    select: { pagadorId: true },
+  });
+
+  if (
+    session?.user.id !== evento?.userId &&
+    session?.user.id !== gasto?.pagadorId
+  ) {
+    throw { error: "You don't have permission to perform this action" };
   }
 };
