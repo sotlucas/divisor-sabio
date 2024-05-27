@@ -1,7 +1,6 @@
 import {z} from "zod";
 
 import {useState, useTransition} from "react";
-import {useFormStatus} from "react-dom";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {useValidatedForm} from "@/lib/hooks/useValidatedForm";
@@ -12,7 +11,6 @@ import {TAddOptimistic} from "@/app/(app)/eventos/[eventoId]/useOptimisticGastos
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Label} from "@/components/ui/label";
-import {useBackPath} from "@/components/shared/BackButton";
 
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover";
 import {CalendarIcon} from "lucide-react";
@@ -25,6 +23,8 @@ import {type EventoId} from "@/lib/db/schema/eventos";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import {es} from "date-fns/locale";
 import {Checkbox} from "@/components/ui/checkbox";
+import {SaveButton} from "@/components/SaveButton";
+import {DeleteButton} from "@/components/DeleteButton";
 
 const GastoForm = ({
                      participantes,
@@ -79,7 +79,6 @@ const GastoForm = ({
     setErrors(null);
 
     const payload = Object.fromEntries(data.entries());
-    console.log(payload)
     const gastoParsed = await insertGastoParams.safeParseAsync({
       eventoId,
       deudoresIds: deudoresGastoNuevoOEditado ?? [],
@@ -126,6 +125,22 @@ const GastoForm = ({
       }
     }
   };
+
+  function handleDelete() {
+    setIsDeleting(true);
+    closeModal && closeModal();
+    startMutation(async () => {
+      addOptimistic && addOptimistic({action: "delete", data: gasto});
+      const error = await deleteGastoAction(gasto.id);
+      setIsDeleting(false);
+      const errorFormatted = {
+        error: error ?? "Error",
+        values: gasto,
+      };
+
+      onSuccess("delete", error ? errorFormatted : undefined);
+    });
+  }
 
   return (
     <form action={handleSubmit} onChange={handleChange}>
@@ -264,7 +279,6 @@ const GastoForm = ({
         }))}
         <div className="h-6"/>
       </div>
-
       <div>
         <Label
           className={cn(
@@ -302,76 +316,18 @@ const GastoForm = ({
           <div className="h-6"/>
         )}
       </div>
-      {/* Schema fields end */
-      }
+      {/* Schema fields end */}
 
-      {/* Save Button */
-      }
+      {/* Save Button */}
       <SaveButton errors={hasErrors} editing={editing}/>
 
-      {/* Delete Button */
-      }
-      {
-        editing ? (
-          <Button
-            type="button"
-            disabled={isDeleting || pending || hasErrors}
-            variant={"destructive"}
-            onClick={() => {
-              setIsDeleting(true);
-              closeModal && closeModal();
-              startMutation(async () => {
-                addOptimistic && addOptimistic({action: "delete", data: gasto});
-                const error = await deleteGastoAction(gasto.id);
-                setIsDeleting(false);
-                const errorFormatted = {
-                  error: error ?? "Error",
-                  values: gasto,
-                };
-
-                onSuccess("delete", error ? errorFormatted : undefined);
-              });
-            }}
-          >
-            {isDeleting ? "Eliminando..." : "Eliminar"}
-          </Button>
-        ) : null
-      }
+      {editing ? (
+        /* Delete Button */
+        <DeleteButton deleting={isDeleting} pending={pending} hasErrors={hasErrors} onClick={handleDelete}/>
+      ) : null}
     </form>
-  )
-    ;
+  );
 };
 
 export default GastoForm;
 
-const SaveButton = ({
-                      editing,
-                      errors,
-                    }: {
-  editing: Boolean;
-  errors: boolean;
-}) => {
-  const {pending} = useFormStatus();
-  const isCreating = pending && editing === false;
-  const isUpdating = pending && editing === true;
-  const crear = isCreating ? "Creando..." : "Crear";
-  const editar = isUpdating ? "Guardando..." : "Guardar";
-
-  console.log("pending " + pending)
-  console.log("creating " + isCreating)
-  console.log("updating " + isUpdating)
-  console.log("editing " + editing)
-  console.log("errors ")
-  console.log(errors)
-
-  return (
-    <Button
-      type="submit"
-      className="mr-2"
-      disabled={isCreating || isUpdating || errors}
-      aria-disabled={isCreating || isUpdating || errors}
-    >
-      {editing ? editar : crear}
-    </Button>
-  );
-};
