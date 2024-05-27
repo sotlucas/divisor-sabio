@@ -38,15 +38,14 @@ export default function EventoList({ eventos }: { eventos: CompleteEvento[] }) {
           closeModal={closeModal}
         />
       </Modal>
-      <div className="absolute right-0 top-0 ">
-        <Button onClick={() => openModal()} variant="default" size="icon">
-          <PlusIcon className="w-4 h-4" />
-        </Button>
-      </div>
       {optimisticEventos.length === 0 ? (
         <EmptyState openModal={openModal} />
       ) : (
-        <DataTable columns={columns} data={optimisticEventos} />
+        <DataTable columns={columns} data={optimisticEventos} searchable>
+          <Button onClick={() => openModal()} variant="default" size="icon">
+            <PlusIcon className="w-4 h-4" />
+          </Button>
+        </DataTable>
       )}
     </div>
   );

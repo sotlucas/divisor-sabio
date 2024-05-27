@@ -19,7 +19,7 @@ export default function GastoList({
   gastos,
   eventos,
   evento,
-  sessionUserId
+  sessionUserId,
 }: {
   participantes: any[];
   gastos: CompleteGasto[];
@@ -55,18 +55,22 @@ export default function GastoList({
           eventoId={evento?.id}
         />
       </Modal>
-      <div className="absolute right-0 top-0">
-        <Button size="icon" variant="default" onClick={() => openModal()}>
-          <PlusIcon className="w-4 h-4" />
-        </Button>
-      </div>
       {optimisticGastos.length === 0 ? (
         <EmptyState openModal={openModal} />
       ) : (
         <DataTable
-          columns={createColumns(participantes, sessionUserId, evento?.userId == sessionUserId)}
+          columns={createColumns(
+            participantes,
+            sessionUserId,
+            evento?.userId == sessionUserId
+          )}
           data={optimisticGastos}
-        />
+          searchable
+        >
+          <Button size="icon" variant="default" onClick={() => openModal()}>
+            <PlusIcon className="w-4 h-4" />
+          </Button>
+        </DataTable>
       )}
     </div>
   );
