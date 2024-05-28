@@ -12,7 +12,7 @@ export const insertGastoParams = baseSchema
     monto: z.coerce.number(),
     fecha: z.coerce.date(),
     eventoId: z.coerce.string().min(1),
-    deudoresIds: z.array(z.string()),
+    deudoresIds: z.array(z.string()).min(1),
   })
   .omit({
     id: true,
