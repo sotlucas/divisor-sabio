@@ -264,6 +264,7 @@ const GastoForm = ({
               <div>
                 <Checkbox
                   value={idParticipanteActual}
+                  id={idParticipanteActual}
                   checked={deudoresGastoNuevoOEditado?.includes(idParticipanteActual)}
                   onCheckedChange={(checked) => {
                     if (errors?.deudoresIds && checked)
@@ -277,9 +278,13 @@ const GastoForm = ({
                         )
                       )
                   }}
-                  className={cn(errors?.deudoresIds ? "mr-2 align-middle ring ring-destructive" : "mr-2 align-middle")}
+                  className={cn(
+                    errors?.deudoresIds ?
+                      "mr-2 align-middle ring ring-destructive" :
+                      "mr-2 align-middle"
+                  )}
                 />
-                <Label className={"mb-2 align-middle"}>{participante.name}</Label>
+                <Label htmlFor={idParticipanteActual} className={"mb-2 align-middle"}>{participante.name}</Label>
               </div>
             </div>)
         }))}
