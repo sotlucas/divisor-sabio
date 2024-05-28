@@ -17,7 +17,7 @@ import {CalendarIcon} from "lucide-react";
 import {Calendar} from "@/components/ui/calendar";
 import {format} from "date-fns";
 
-import {type Gasto, insertGastoParams, NewGasto, NewGastoParams} from "@/lib/db/schema/gastos";
+import {type Gasto, insertGastoParams, NewGastoParams} from "@/lib/db/schema/gastos";
 import {createGastoAction, deleteGastoAction, updateGastoAction,} from "@/lib/actions/gastos";
 import {type EventoId} from "@/lib/db/schema/eventos";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
