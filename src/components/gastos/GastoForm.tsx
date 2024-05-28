@@ -250,8 +250,7 @@ const GastoForm = ({
       <div>
         <Label
           className={cn(
-            "mb-2 inline-block",
-            errors?.deudoresIds ? "text-destructive" : ""
+            errors?.deudoresIds ? "mb-2 inline-block text-destructive" : "mb-2 inline-block"
           )}
         >
           Adeudado por
@@ -260,29 +259,31 @@ const GastoForm = ({
           const idParticipanteActual = participante.id;
 
           return (
-            <div key={idParticipanteActual}>
-              <Checkbox
-                value={idParticipanteActual}
-                checked={deudoresGastoNuevoOEditado?.includes(idParticipanteActual)}
-                onCheckedChange={(checked) => {
-                  if (errors?.deudoresIds && checked)
-                    setErrors({...errors, deudoresIds: undefined})
+            <div key={idParticipanteActual} className="mb-2 block">
+              <div>
+                <Checkbox
+                  value={idParticipanteActual}
+                  checked={deudoresGastoNuevoOEditado?.includes(idParticipanteActual)}
+                  onCheckedChange={(checked) => {
+                    if (errors?.deudoresIds && checked)
+                      setErrors({...errors, deudoresIds: undefined})
 
-                  return checked
-                    ? setDeudoresGastoNuevoOEditado([...deudoresGastoNuevoOEditado, idParticipanteActual])
-                    : setDeudoresGastoNuevoOEditado(
-                      deudoresGastoNuevoOEditado?.filter(
-                        (deudorId) => deudorId !== idParticipanteActual
+                    return checked
+                      ? setDeudoresGastoNuevoOEditado([...deudoresGastoNuevoOEditado, idParticipanteActual])
+                      : setDeudoresGastoNuevoOEditado(
+                        deudoresGastoNuevoOEditado?.filter(
+                          (deudorId) => deudorId !== idParticipanteActual
+                        )
                       )
-                    )
-                }}
-                className={cn(errors?.deudoresIds ? "ring ring-destructive" : "")}
-              />
-              <Label className={"mb-2"}>{participante.name}</Label>
+                  }}
+                  className={cn(errors?.deudoresIds ? "mr-2 align-middle ring ring-destructive" : "mr-2 align-middle")}
+                />
+                <Label className={"mb-2 align-middle"}>{participante.name}</Label>
+              </div>
             </div>)
         }))}
         {errors?.deudoresIds ? (
-          <p className="text-xs text-destructive mt-2">{"Debe seleccionar al menos 1 deudor."}</p>
+          <p className="text-destructive h-6 text-xs">{"Debe seleccionar al menos 1 deudor."}</p>
         ) : (
           <div className="h-6"/>
         )}
