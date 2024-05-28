@@ -17,7 +17,7 @@ import {CalendarIcon} from "lucide-react";
 import {Calendar} from "@/components/ui/calendar";
 import {format} from "date-fns";
 
-import {type Gasto, insertGastoParams} from "@/lib/db/schema/gastos";
+import {type Gasto, insertGastoParams, NewGasto, NewGastoParams} from "@/lib/db/schema/gastos";
 import {createGastoAction, deleteGastoAction, updateGastoAction,} from "@/lib/actions/gastos";
 import {type EventoId} from "@/lib/db/schema/eventos";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
@@ -44,7 +44,7 @@ const GastoForm = ({
   postSuccess?: () => void;
 }) => {
   const {errors, hasErrors, setErrors, handleChange} =
-    useValidatedForm<Gasto>(insertGastoParams);
+    useValidatedForm<NewGastoParams>(insertGastoParams);
   const editing = !!gasto?.id;
   const [fecha, setFecha] = useState<Date | undefined>(gasto?.fecha);
 
@@ -251,7 +251,7 @@ const GastoForm = ({
         <Label
           className={cn(
             "mb-2 inline-block",
-            "" // errors?.pagadorId ? "text-destructive" : ""
+            errors?.deudoresIds ? "text-destructive" : ""
           )}
         >
           Adeudado por
@@ -265,6 +265,9 @@ const GastoForm = ({
                 value={idParticipanteActual}
                 checked={deudoresGastoNuevoOEditado?.includes(idParticipanteActual)}
                 onCheckedChange={(checked) => {
+                  if (errors?.deudoresIds && checked)
+                    setErrors({...errors, deudoresIds: undefined})
+
                   return checked
                     ? setDeudoresGastoNuevoOEditado([...deudoresGastoNuevoOEditado, idParticipanteActual])
                     : setDeudoresGastoNuevoOEditado(
@@ -273,11 +276,16 @@ const GastoForm = ({
                       )
                     )
                 }}
+                className={cn(errors?.deudoresIds ? "ring ring-destructive" : "")}
               />
               <Label className={"mb-2"}>{participante.name}</Label>
             </div>)
         }))}
-        <div className="h-6"/>
+        {errors?.deudoresIds ? (
+          <p className="text-xs text-destructive mt-2">{"Debe seleccionar al menos 1 deudor."}</p>
+        ) : (
+          <div className="h-6"/>
+        )}
       </div>
       <div>
         <Label
