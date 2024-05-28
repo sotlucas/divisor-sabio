@@ -255,11 +255,12 @@ const GastoForm = ({
         >
           Adeudado por
         </Label>
+
         {participantes?.map(((participante: any) => {
           const idParticipanteActual = participante.id;
 
           return (
-            <div key={idParticipanteActual} className="mb-2 block">
+            <div key={idParticipanteActual} className="mb-1 block">
               <div>
                 <Checkbox
                   value={idParticipanteActual}
