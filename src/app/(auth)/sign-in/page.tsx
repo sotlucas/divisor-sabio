@@ -48,13 +48,17 @@ export default function SignInPage() {
         <CardContent>
           <AuthFormError state={state} />
           <form action={formAction}>
-            <Label htmlFor="email">Email</Label>
-            <Input name="email" id="email" type="email" required />
-            <br />
-            <Label htmlFor="password">Contraseña</Label>
-            <Input type="password" name="password" id="password" required />
-            <br />
-            <SubmitButton />
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input name="email" id="email" type="email" required />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="password">Contraseña</Label>
+                <Input type="password" name="password" id="password" required />
+              </div>
+              <SubmitButton />
+            </div>
           </form>
           <div className="mt-4 text-sm text-center text-muted-foreground">
             ¿No tenés cuenta?{" "}
