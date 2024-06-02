@@ -106,7 +106,7 @@ const GastoForm = ({
       eventoId,
       deudoresIds: deudoresGastoNuevoOEditado ?? [],
       pagadorId: payload.pagadorId ?? gasto?.pagadorId,
-      esDeudaPagada: gasto.esDeudaPagada ?? false,
+      esDeudaPagada: gasto?.esDeudaPagada ?? false,
       ...payload,
     });
     if (!gastoParsed.success) {
@@ -262,6 +262,9 @@ const GastoForm = ({
               selected={fecha}
               initialFocus
               locale={es}
+              disabled={(date) =>
+                date > new Date() || date < new Date("1900-01-01")
+              }
             />
           </PopoverContent>
         </Popover>

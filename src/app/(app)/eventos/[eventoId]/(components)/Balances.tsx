@@ -1,7 +1,7 @@
 "use client";
 
 import { Balance } from "@/lib/api/calculadora/queries";
-import { Card, DeltaBar } from "@tremor/react";
+import { DeltaBar } from "@tremor/react";
 
 interface Props {
   balances: Balance[];

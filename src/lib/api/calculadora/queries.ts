@@ -7,6 +7,11 @@ export interface Balance {
   balance: number;
 }
 
+export interface GastoTotal {
+  nombre: string;
+  total: number;
+}
+
 export const getBalancesByEvento = async (
   id: EventoId
 ): Promise<{ balances: Balance[] }> => {
@@ -72,4 +77,55 @@ export const getBalancesByEvento = async (
   });
 
   return { balances: balancesWithNames ?? [] };
+};
+
+export const getGastosWithoutPayedDebtsByEvento = async (
+  id: EventoId
+): Promise<{ gastos: GastoTotal[] }> => {
+  const { id: eventoId } = eventoIdSchema.parse({ id });
+  const evento = await db.evento.findFirst({
+    where: {
+      id: eventoId,
+    },
+    include: {
+      gastos: {
+        where: {
+          esDeudaPagada: false,
+        },
+        select: {
+          pagadorId: true,
+          monto: true,
+        },
+      },
+      participantes: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  const gastosTotales: { userId: string; total: number }[] = [];
+
+  evento?.gastos.forEach((gasto) => {
+    const { pagadorId, monto } = gasto;
+    const total = gastosTotales.find((b) => b.userId === pagadorId);
+    if (total) {
+      total.total += monto;
+    } else {
+      gastosTotales.push({ userId: pagadorId, total: monto });
+    }
+  });
+
+  const gastosTotalesWithNames = evento?.participantes.map((participante) => {
+    const total = gastosTotales.find((b) => b.userId === participante.id);
+
+    return {
+      nombre: participante.name,
+      total: total ? total.total : 0,
+    } as GastoTotal;
+  });
+
+  return { gastos: gastosTotalesWithNames ?? [] };
 };
