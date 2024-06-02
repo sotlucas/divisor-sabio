@@ -38,6 +38,8 @@ const Evento = async ({ id, children }: { id: string; children: any }) => {
   const { balances } = await getBalancesByEvento(id);
 
   if (!evento) notFound();
+  const eventOwnerId = evento.userId;
+
   return (
     <Suspense fallback={<Loading />}>
       <div className="relative">
@@ -48,7 +50,7 @@ const Evento = async ({ id, children }: { id: string; children: any }) => {
         </Button>
         <OptimisticEvento
           evento={evento}
-          isOwner={session?.user.id == evento.userId}
+          isOwner={session?.user.id == eventOwnerId}
         />
       </div>
       <div className="relative mr-4 ml-4 flex items-center justify-between mt-6 -mb-1 flex-wrap gap-4">
@@ -62,7 +64,8 @@ const Evento = async ({ id, children }: { id: string; children: any }) => {
           <OptimisticParticipantes
             participantes={participantes}
             evento={evento}
-            isOwner={session?.user.id == evento.userId}
+            isOwner={session?.user.id == eventOwnerId}
+            ownerId={eventOwnerId}
           />
         </div>
       </div>
