@@ -51,9 +51,9 @@ const Evento = async ({ id, children }: { id: string; children: any }) => {
           isOwner={session?.user.id == evento.userId}
         />
       </div>
-      <div className="relative mr-4 ml-4 flex items-center justify-between mt-6 -mb-1">
+      <div className="relative mr-4 ml-4 flex items-center justify-between mt-6 -mb-1 flex-wrap gap-4">
         <GroupedTabs eventoId={id} />
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap gap-2">
           <OptimisticLiquidarDeudas
             participantes={participantes}
             eventoId={evento.id}

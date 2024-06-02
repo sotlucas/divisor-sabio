@@ -27,7 +27,7 @@ const Balances = ({ balances }: Props) => {
               <span>$ {balance.value}</span>
             </span>
           </p>
-          <DeltaBar value={balance.value} className="mt-3" color="black" />
+          <DeltaBar value={balance.value} className="mt-3" />
         </div>
       ))}
     </>
