@@ -4,7 +4,7 @@ import { getEventoByIdWithGastos } from "@/lib/api/eventos/queries";
 import { checkAuth } from "@/lib/auth/utils";
 import { getBalancesByEvento } from "@/lib/api/calculadora/queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Balances from "../Balances";
+import Balances from "../(components)/Balances";
 
 export const revalidate = 0;
 

@@ -2,18 +2,18 @@ import { PropsWithChildren, Suspense } from "react";
 import { notFound } from "next/navigation";
 
 import { getEventoByIdWithGastos } from "@/lib/api/eventos/queries";
-import OptimisticEvento from "./OptimisticEvento";
+import OptimisticEvento from "./(components)/OptimisticEvento";
 import { checkAuth, getUserAuth } from "@/lib/auth/utils";
 
 import Loading from "@/app/loading";
-import OptimisticParticipantes from "./OptimisticParticipantes";
-import { GroupedTabs } from "./GroupedTabs";
+import OptimisticParticipantes from "./(components)/OptimisticParticipantes";
+import { GroupedTabs } from "./(components)/GroupedTabs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ChevronLeftIcon } from "lucide-react";
-import OptimisticBalances from "./OptimisticBalances";
+import OptimisticBalances from "./(components)/OptimisticBalances";
 import { getBalancesByEvento } from "@/lib/api/calculadora/queries";
-import OptimisticLiquidarDeudas from "./OptimisticLiquidarDeudas";
+import OptimisticLiquidarDeudas from "./(components)/OptimisticLiquidarDeudas";
 
 export const revalidate = 0;
 
