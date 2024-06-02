@@ -5,13 +5,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/shared/Modal";
 import { Balance } from "@/lib/api/calculadora/queries";
-import BalanceList from "@/components/balances/BalanceList";
 import { usePathname } from "next/navigation";
+import Balances from "./Balances";
 
 export default function OptimisticBalances({
   balances,
 }: {
-  balances: Balance[],
+  balances: Balance[];
 }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -21,11 +21,12 @@ export default function OptimisticBalances({
     return null;
   }
 
-
   return (
     <>
       <Modal open={open} setOpen={setOpen} title="Balances">
-        <BalanceList balances={balances} />
+        <div className="mt-4">
+          <Balances balances={balances} />
+        </div>
       </Modal>
       <Button variant="outline" onClick={() => setOpen(true)}>
         Balances

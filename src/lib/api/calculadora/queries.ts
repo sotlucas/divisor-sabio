@@ -62,14 +62,14 @@ export const getBalancesByEvento = async (
   });
 
   // Add user names to the balances and if the user is not in the balances, add it with a balance of 0
-  const balancesWithNames = balances.map((balance) => {
-    const user = evento?.participantes.find((p) => p.id === balance.userId);
+  const balancesWithNames = evento?.participantes.map((participante) => {
+    const balance = balances.find((b) => b.userId === participante.id);
     return {
-      id: balance.userId,
-      nombre: user?.name || "",
-      balance: balance.balance,
-    };
+      id: participante.id,
+      nombre: participante.name,
+      balance: balance ? balance.balance : 0,
+    } as Balance;
   });
 
-  return { balances: balancesWithNames };
+  return { balances: balancesWithNames ?? [] };
 };
