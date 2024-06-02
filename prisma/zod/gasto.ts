@@ -8,6 +8,7 @@ export const gastoSchema = z.object({
   fecha: z.date(),
   eventoId: z.string(),
   pagadorId: z.string(),
+  esDeudaPagada: z.boolean(),
   createdAt: z.date(),
   updatedAt: z.date(),
 })
