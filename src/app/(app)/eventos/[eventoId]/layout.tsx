@@ -2,18 +2,18 @@ import { PropsWithChildren, Suspense } from "react";
 import { notFound } from "next/navigation";
 
 import { getEventoByIdWithGastos } from "@/lib/api/eventos/queries";
-import OptimisticEvento from "./OptimisticEvento";
+import OptimisticEvento from "./(components)/OptimisticEvento";
 import { checkAuth, getUserAuth } from "@/lib/auth/utils";
 
 import Loading from "@/app/loading";
-import OptimisticParticipantes from "./OptimisticParticipantes";
-import { GroupedTabs } from "./GroupedTabs";
+import OptimisticParticipantes from "./(components)/OptimisticParticipantes";
+import { GroupedTabs } from "./(components)/GroupedTabs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ChevronLeftIcon } from "lucide-react";
-import OptimisticBalances from "./OptimisticBalances";
+import OptimisticBalances from "./(components)/OptimisticBalances";
 import { getBalancesByEvento } from "@/lib/api/calculadora/queries";
-import OptimisticLiquidarDeudas from "./OptimisticLiquidarDeudas";
+import OptimisticLiquidarDeudas from "./(components)/OptimisticLiquidarDeudas";
 
 export const revalidate = 0;
 
@@ -51,9 +51,9 @@ const Evento = async ({ id, children }: { id: string; children: any }) => {
           isOwner={session?.user.id == evento.userId}
         />
       </div>
-      <div className="relative mr-4 ml-4 flex items-center justify-between mt-6 -mb-1">
+      <div className="relative mr-4 ml-4 flex items-center justify-between mt-6 -mb-1 flex-wrap gap-4">
         <GroupedTabs eventoId={id} />
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap gap-2">
           <OptimisticLiquidarDeudas
             participantes={participantes}
             eventoId={evento.id}

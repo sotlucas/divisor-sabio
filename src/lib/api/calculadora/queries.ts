@@ -7,6 +7,11 @@ export interface Balance {
   balance: number;
 }
 
+export interface GastoTotal {
+  nombre: string;
+  total: number;
+}
+
 export const getBalancesByEvento = async (
   id: EventoId
 ): Promise<{ balances: Balance[] }> => {
@@ -62,14 +67,65 @@ export const getBalancesByEvento = async (
   });
 
   // Add user names to the balances and if the user is not in the balances, add it with a balance of 0
-  const balancesWithNames = balances.map((balance) => {
-    const user = evento?.participantes.find((p) => p.id === balance.userId);
+  const balancesWithNames = evento?.participantes.map((participante) => {
+    const balance = balances.find((b) => b.userId === participante.id);
     return {
-      id: balance.userId,
-      nombre: user?.name || "",
-      balance: balance.balance,
-    };
+      id: participante.id,
+      nombre: participante.name,
+      balance: balance ? balance.balance : 0,
+    } as Balance;
   });
 
-  return { balances: balancesWithNames };
+  return { balances: balancesWithNames ?? [] };
+};
+
+export const getGastosWithoutPayedDebtsByEvento = async (
+  id: EventoId
+): Promise<{ gastos: GastoTotal[] }> => {
+  const { id: eventoId } = eventoIdSchema.parse({ id });
+  const evento = await db.evento.findFirst({
+    where: {
+      id: eventoId,
+    },
+    include: {
+      gastos: {
+        where: {
+          esDeudaPagada: false,
+        },
+        select: {
+          pagadorId: true,
+          monto: true,
+        },
+      },
+      participantes: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  const gastosTotales: { userId: string; total: number }[] = [];
+
+  evento?.gastos.forEach((gasto) => {
+    const { pagadorId, monto } = gasto;
+    const total = gastosTotales.find((b) => b.userId === pagadorId);
+    if (total) {
+      total.total += monto;
+    } else {
+      gastosTotales.push({ userId: pagadorId, total: monto });
+    }
+  });
+
+  const gastosTotalesWithNames = evento?.participantes.map((participante) => {
+    const total = gastosTotales.find((b) => b.userId === participante.id);
+
+    return {
+      nombre: participante.name,
+      total: total ? total.total : 0,
+    } as GastoTotal;
+  });
+
+  return { gastos: gastosTotalesWithNames ?? [] };
 };

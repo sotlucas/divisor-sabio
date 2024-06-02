@@ -1,40 +1,58 @@
-import {z} from "zod";
+import { z } from "zod";
 
-import {useState, useTransition} from "react";
-import {useRouter} from "next/navigation";
-import {toast} from "sonner";
-import {useValidatedForm} from "@/lib/hooks/useValidatedForm";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useValidatedForm } from "@/lib/hooks/useValidatedForm";
 
-import {type Action, cn} from "@/lib/utils";
-import {TAddOptimistic} from "@/app/(app)/eventos/[eventoId]/useOptimisticGastos";
+import { type Action, cn } from "@/lib/utils";
+import { TAddOptimistic } from "@/app/(app)/eventos/[eventoId]/useOptimisticGastos";
 
-import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
-import {Label} from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
-import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover";
-import {CalendarIcon} from "lucide-react";
-import {Calendar} from "@/components/ui/calendar";
-import {format} from "date-fns";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
 
-import {type Gasto, insertGastoParams, NewGastoParams} from "@/lib/db/schema/gastos";
-import {createGastoAction, deleteGastoAction, updateGastoAction,} from "@/lib/actions/gastos";
-import {type EventoId} from "@/lib/db/schema/eventos";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
-import {es} from "date-fns/locale";
-import {Checkbox} from "@/components/ui/checkbox";
-import {SaveButton} from "@/components/SaveButton";
-import {DeleteButton} from "@/components/DeleteButton";
+import {
+  type Gasto,
+  insertGastoParams,
+  NewGastoParams,
+} from "@/lib/db/schema/gastos";
+import {
+  createGastoAction,
+  deleteGastoAction,
+  updateGastoAction,
+} from "@/lib/actions/gastos";
+import { type EventoId } from "@/lib/db/schema/eventos";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { es } from "date-fns/locale";
+import { Checkbox } from "@/components/ui/checkbox";
+import { SaveButton } from "@/components/SaveButton";
+import { DeleteButton } from "@/components/DeleteButton";
 
 const GastoForm = ({
-                     participantes,
-                     eventoId,
-                     gasto,
-                     openModal,
-                     closeModal,
-                     addOptimistic,
-                     postSuccess,
-                   }: {
+  participantes,
+  eventoId,
+  gasto,
+  openModal,
+  closeModal,
+  addOptimistic,
+  postSuccess,
+}: {
   participantes?: any[];
   gasto?: any;
   eventoId?: EventoId;
@@ -43,7 +61,7 @@ const GastoForm = ({
   addOptimistic?: TAddOptimistic;
   postSuccess?: () => void;
 }) => {
-  const {errors, hasErrors, setErrors, handleChange} =
+  const { errors, hasErrors, setErrors, handleChange } =
     useValidatedForm<NewGastoParams>(insertGastoParams);
   const editing = !!gasto?.id;
   const [fecha, setFecha] = useState<Date | undefined>(gasto?.fecha);
@@ -53,9 +71,14 @@ const GastoForm = ({
 
   const router = useRouter();
 
-  const deudoresIdsDelGastoEditado = gasto?.deudas?.map((deuda: { deudorId: string; }) => deuda.deudorId)
-  const participantesIds = participantes?.map(participante => participante.id) || [];
-  const [deudoresGastoNuevoOEditado, setDeudoresGastoNuevoOEditado] = useState<string[]>(deudoresIdsDelGastoEditado || participantesIds)
+  const deudoresIdsDelGastoEditado = gasto?.deudas?.map(
+    (deuda: { deudorId: string }) => deuda.deudorId
+  );
+  const participantesIds =
+    participantes?.map((participante) => participante.id) || [];
+  const [deudoresGastoNuevoOEditado, setDeudoresGastoNuevoOEditado] = useState<
+    string[]
+  >(deudoresIdsDelGastoEditado || participantesIds);
 
   const onSuccess = (
     action: Action,
@@ -83,9 +106,11 @@ const GastoForm = ({
       eventoId,
       deudoresIds: deudoresGastoNuevoOEditado ?? [],
       pagadorId: payload.pagadorId ?? gasto?.pagadorId,
+      esDeudaPagada: gasto?.esDeudaPagada ?? false,
       ...payload,
     });
     if (!gastoParsed.success) {
+      console.log("ASD", gastoParsed.error.flatten().fieldErrors);
       setErrors(gastoParsed?.error.flatten().fieldErrors);
       return;
     }
@@ -101,13 +126,13 @@ const GastoForm = ({
     try {
       startMutation(async () => {
         addOptimistic &&
-        addOptimistic({
-          data: pendingGasto,
-          action: editing ? "update" : "create",
-        });
+          addOptimistic({
+            data: pendingGasto,
+            action: editing ? "update" : "create",
+          });
 
         const error = editing
-          ? await updateGastoAction({...values, id: gasto.id})
+          ? await updateGastoAction({ ...values, id: gasto.id })
           : await createGastoAction(values);
 
         const errorFormatted = {
@@ -130,7 +155,7 @@ const GastoForm = ({
     setIsDeleting(true);
     closeModal && closeModal();
     startMutation(async () => {
-      addOptimistic && addOptimistic({action: "delete", data: gasto});
+      addOptimistic && addOptimistic({ action: "delete", data: gasto });
       const error = await deleteGastoAction(gasto.id);
       setIsDeleting(false);
       const errorFormatted = {
@@ -165,7 +190,7 @@ const GastoForm = ({
         {errors?.nombre ? (
           <p className="text-xs text-destructive mt-2">{errors.nombre[0]}</p>
         ) : (
-          <div className="h-6"/>
+          <div className="h-6" />
         )}
       </div>
       <div>
@@ -191,7 +216,7 @@ const GastoForm = ({
         {errors?.monto ? (
           <p className="text-xs text-destructive mt-2">{errors.monto[0]}</p>
         ) : (
-          <div className="h-6"/>
+          <div className="h-6" />
         )}
       </div>
       <div>
@@ -203,12 +228,11 @@ const GastoForm = ({
         >
           Fecha
         </Label>
-        <br/>
+        <br />
         <Popover>
           <Input
             name="fecha"
-            onChange={() => {
-            }}
+            onChange={() => {}}
             readOnly
             value={fecha?.toUTCString() ?? new Date().toUTCString()}
             className="hidden"
@@ -224,11 +248,11 @@ const GastoForm = ({
               )}
             >
               {fecha ? (
-                <span>{format(fecha, "PPP", {locale: es})}</span>
+                <span>{format(fecha, "PPP", { locale: es })}</span>
               ) : (
                 <span>Elegir una fecha</span>
               )}
-              <CalendarIcon className="ml-auto h-4 w-4 opacity-50"/>
+              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
@@ -238,25 +262,30 @@ const GastoForm = ({
               selected={fecha}
               initialFocus
               locale={es}
+              disabled={(date) =>
+                date > new Date() || date < new Date("1900-01-01")
+              }
             />
           </PopoverContent>
         </Popover>
         {errors?.fecha ? (
           <p className="text-xs text-destructive mt-2">{errors.fecha[0]}</p>
         ) : (
-          <div className="h-6"/>
+          <div className="h-6" />
         )}
       </div>
       <div>
         <Label
           className={cn(
-            errors?.deudoresIds ? "mb-2 inline-block text-destructive" : "mb-2 inline-block"
+            errors?.deudoresIds
+              ? "mb-2 inline-block text-destructive"
+              : "mb-2 inline-block"
           )}
         >
           Adeudado por
         </Label>
 
-        {participantes?.map(((participante: any) => {
+        {participantes?.map((participante: any) => {
           const idParticipanteActual = participante.id;
 
           return (
@@ -265,33 +294,46 @@ const GastoForm = ({
                 <Checkbox
                   value={idParticipanteActual}
                   id={idParticipanteActual}
-                  checked={deudoresGastoNuevoOEditado?.includes(idParticipanteActual)}
+                  checked={deudoresGastoNuevoOEditado?.includes(
+                    idParticipanteActual
+                  )}
                   onCheckedChange={(checked) => {
                     if (errors?.deudoresIds && checked)
-                      setErrors({...errors, deudoresIds: undefined})
+                      setErrors({ ...errors, deudoresIds: undefined });
 
                     return checked
-                      ? setDeudoresGastoNuevoOEditado([...deudoresGastoNuevoOEditado, idParticipanteActual])
+                      ? setDeudoresGastoNuevoOEditado([
+                          ...deudoresGastoNuevoOEditado,
+                          idParticipanteActual,
+                        ])
                       : setDeudoresGastoNuevoOEditado(
-                        deudoresGastoNuevoOEditado?.filter(
-                          (deudorId) => deudorId !== idParticipanteActual
-                        )
-                      )
+                          deudoresGastoNuevoOEditado?.filter(
+                            (deudorId) => deudorId !== idParticipanteActual
+                          )
+                        );
                   }}
                   className={cn(
-                    errors?.deudoresIds ?
-                      "mr-2 align-middle ring ring-destructive" :
-                      "mr-2 align-middle"
+                    errors?.deudoresIds
+                      ? "mr-2 align-middle ring ring-destructive"
+                      : "mr-2 align-middle"
                   )}
                 />
-                <Label htmlFor={idParticipanteActual} className={"mb-2 align-middle"}>{participante.name}</Label>
+                <Label
+                  htmlFor={idParticipanteActual}
+                  className={"mb-2 align-middle"}
+                >
+                  {participante.name}
+                </Label>
               </div>
-            </div>)
-        }))}
+            </div>
+          );
+        })}
         {errors?.deudoresIds ? (
-          <p className="text-destructive h-6 text-xs">{"Debe seleccionar al menos 1 deudor."}</p>
+          <p className="text-destructive h-6 text-xs">
+            {"Debe seleccionar al menos 1 deudor."}
+          </p>
         ) : (
-          <div className="h-6"/>
+          <div className="h-6" />
         )}
       </div>
       <div>
@@ -312,7 +354,7 @@ const GastoForm = ({
           <SelectTrigger
             className={cn(errors?.pagadorId ? "ring ring-destructive" : "")}
           >
-            <SelectValue placeholder="Seleccionar participante"/>
+            <SelectValue placeholder="Seleccionar participante" />
           </SelectTrigger>
           <SelectContent>
             {participantes?.map((participante) => (
@@ -328,21 +370,25 @@ const GastoForm = ({
         {errors?.pagadorId ? (
           <p className="text-xs text-destructive mt-2">{errors.pagadorId[0]}</p>
         ) : (
-          <div className="h-6"/>
+          <div className="h-6" />
         )}
       </div>
       {/* Schema fields end */}
 
       {/* Save Button */}
-      <SaveButton errors={hasErrors} editing={editing}/>
+      <SaveButton errors={hasErrors} editing={editing} />
 
       {editing ? (
         /* Delete Button */
-        <DeleteButton deleting={isDeleting} pending={pending} hasErrors={hasErrors} onClick={handleDelete}/>
+        <DeleteButton
+          deleting={isDeleting}
+          pending={pending}
+          hasErrors={hasErrors}
+          onClick={handleDelete}
+        />
       ) : null}
     </form>
   );
 };
 
 export default GastoForm;
-

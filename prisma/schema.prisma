@@ -52,14 +52,15 @@ model Evento {
 }
 
 model Gasto {
-  id        String   @id @default(cuid())
-  monto     Float
-  nombre    String
-  fecha     DateTime
-  evento    Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
-  eventoId  String
-  pagador   User     @relation(fields: [pagadorId], references: [id])
-  pagadorId String
+  id            String   @id @default(cuid())
+  monto         Float
+  nombre        String
+  fecha         DateTime
+  evento        Evento   @relation(fields: [eventoId], references: [id], onDelete: Cascade)
+  eventoId      String
+  pagador       User     @relation(fields: [pagadorId], references: [id])
+  pagadorId     String
+  esDeudaPagada Boolean  @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
