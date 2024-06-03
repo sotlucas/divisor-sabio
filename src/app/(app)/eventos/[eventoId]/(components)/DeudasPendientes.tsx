@@ -8,7 +8,8 @@ interface Props {
 }
 
 const DeudasPendientes = ({ gastoTotal, deudaTotal }: Props) => {
-  const porcentajePagado = ((gastoTotal - deudaTotal) / gastoTotal) * 100;
+
+  const porcentajePagado = ((gastoTotal - deudaTotal) / gastoTotal) * 100 || 100;
 
   let color = "green";
   if (porcentajePagado < 30) {
