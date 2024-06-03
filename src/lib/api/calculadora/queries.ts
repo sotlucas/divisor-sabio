@@ -12,6 +12,11 @@ export interface GastoTotal {
   total: number;
 }
 
+export interface GastoATravesDelTiempo {
+  fecha: Date;
+  total: number;
+}
+
 export const getBalancesByEvento = async (
   id: EventoId
 ): Promise<{ balances: Balance[] }> => {
@@ -79,7 +84,7 @@ export const getBalancesByEvento = async (
   return { balances: balancesWithNames ?? [] };
 };
 
-export const getGastosWithoutPayedDebtsByEvento = async (
+export const getGastosByParticipanteWithoutPayedDebts = async (
   id: EventoId
 ): Promise<{ gastos: GastoTotal[] }> => {
   const { id: eventoId } = eventoIdSchema.parse({ id });
@@ -129,3 +134,35 @@ export const getGastosWithoutPayedDebtsByEvento = async (
 
   return { gastos: gastosTotalesWithNames ?? [] };
 };
+
+export const getGastosWithoutPayedDebts = async (
+  id: EventoId
+): Promise<{ gastosATravesDelTiempo: GastoATravesDelTiempo[] }> => {
+  const { id: eventoId } = eventoIdSchema.parse({ id });
+  const evento = await db.evento.findFirst({
+    where: {
+      id: eventoId,
+    },
+    include: {
+      gastos: {
+        where: {
+          esDeudaPagada: false,
+        },
+        select: {
+          monto: true,
+          fecha: true,
+        },
+      },
+    },
+  },
+  );
+
+  const gastosTotales = evento?.gastos.map((gasto) => ({
+    total: gasto.monto,
+    fecha: gasto.fecha,
+  }));
+
+  return { gastosATravesDelTiempo: gastosTotales ?? [] };
+
+}
+
