@@ -6,12 +6,14 @@ import {
   Balance,
   GastoTotal,
   getBalancesByEvento,
-  getGastosWithoutPayedDebtsByEvento,
+  getGastosByParticipanteWithoutPayedDebts,
+  getGastosWithoutPayedDebts,
 } from "@/lib/api/calculadora/queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Balances from "../(components)/Balances";
 import GastosTotales from "../(components)/GastosTotales";
 import DeudasPendientes from "../(components)/DeudasPendientes";
+import GastosTotalesAreaChart from "../(components)/GastosTotalesAreaChart";
 
 export const revalidate = 0;
 
@@ -42,9 +44,11 @@ const Estadisticas = async ({ id }: { id: string }) => {
 
   const { evento, participantes } = await getEventoByIdWithGastos(id);
   const { balances } = await getBalancesByEvento(id);
-  const { gastos: gastosTotales } = await getGastosWithoutPayedDebtsByEvento(
+  const { gastos: gastosTotales } = await getGastosByParticipanteWithoutPayedDebts(
     id
   );
+
+  const { gastosATravesDelTiempo } = await getGastosWithoutPayedDebts(id);
 
   const { gastoTotal, deudaTotal } = getGastosPagadosTotales(
     gastosTotales,
@@ -78,6 +82,16 @@ const Estadisticas = async ({ id }: { id: string }) => {
           </CardHeader>
           <CardContent>
             <DeudasPendientes gastoTotal={gastoTotal} deudaTotal={deudaTotal} />
+          </CardContent>
+        </Card>
+      </div>
+      <div className="mt-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Gastos totales a través del tiempo</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <GastosTotalesAreaChart gastosATravesDelTiempo={gastosATravesDelTiempo} />
           </CardContent>
         </Card>
       </div>
