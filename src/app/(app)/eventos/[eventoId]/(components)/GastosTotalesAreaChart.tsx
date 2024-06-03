@@ -28,12 +28,25 @@ const convertDate = (date: Date) => {
 const dataFormatter = (number: number) => `$ ${number.toFixed(2)}`;
 
 const GastosTotalesAreaChart = ({ gastosATravesDelTiempo }: Props) => {
-  // Sumar los gastos totales de cada día
+
+  // Unify the total of gastos of the same date
+  const data = gastosATravesDelTiempo.reduce((acc, gasto) => {
+    const date = convertDate(gasto.fecha);
+    const current = acc.find((d) => d.date === date);
+    if (current) {
+      current.GastosTotales += gasto.total;
+    } else {
+      acc.push({ date, GastosTotales: gasto.total });
+    }
+    return acc;
+  }, [] as { date: string; GastosTotales: number }[]);
+
+  // Now sum the gastos of all previous dates to get the total gastos at each date
   let suma = 0;
-  const data = gastosATravesDelTiempo.map((gasto) => ({
-    GastosTotales: suma += gasto.total,
-    date: convertDate(gasto.fecha),
-  }));
+  data.forEach((d, i) => {
+    suma += d.GastosTotales;
+    d.GastosTotales = suma;
+  });
 
   return (
     <div className="">
