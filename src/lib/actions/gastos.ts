@@ -1,17 +1,13 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import {
-  createGasto,
-  deleteGasto,
-  updateGasto,
-} from "@/lib/api/gastos/mutations";
+import {revalidatePath} from "next/cache";
+import {createGasto, deleteGasto, updateGasto,} from "@/lib/api/gastos/mutations";
 import {
   GastoId,
-  NewGastoParams,
-  UpdateGastoParams,
   gastoIdSchema,
   insertGastoParams,
+  NewGastoParams,
+  UpdateGastoParams,
   updateGastoParams,
 } from "@/lib/db/schema/gastos";
 
@@ -49,7 +45,7 @@ export const updateGastoAction = async (input: UpdateGastoParams) => {
 
 export const deleteGastoAction = async (input: GastoId) => {
   try {
-    const payload = gastoIdSchema.parse({ id: input });
+    const payload = gastoIdSchema.parse({id: input});
     await deleteGasto(payload.id);
     revalidateGastos();
   } catch (e) {

@@ -1,11 +1,15 @@
 import Link from "next/link";
 
 import SidebarItems from "./SidebarItems";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+import {Avatar, AvatarFallback} from "./ui/avatar";
 
-import { AuthSession, getUserAuth } from "@/lib/auth/utils";
+import {AuthSession, getUserAuth} from "@/lib/auth/utils";
 
 import Image from 'next/image';
+import {Divider} from "@tremor/react";
+import dynamic from "next/dynamic";
+
+const Notifications = dynamic(() => import('@/components/Notifications'), { ssr: false });
 
 const Sidebar = async () => {
   const session = await getUserAuth();
@@ -17,13 +21,16 @@ const Sidebar = async () => {
         <div className="space-y-4">
           <div>
             <Link href="/eventos">
-              <Image src={`/divisor_sabio.png`} className="ml-4" height="50" width="50" alt="El pensador rodeado de dos D y S doradas" />
+              <Image src={`/divisor_sabio.png`} className="ml-4 rounded" height="50" width="50"
+                     alt="El pensador rodeado de dos D y S doradas"/>
             </Link>
             <p className="text-lg font-semibold ml-4">Divisor Sabio</p>
           </div>
-          <SidebarItems />
+          <SidebarItems/>
+          <Divider/>
+          <Notifications/>
         </div>
-        <UserDetails session={session} />
+        <UserDetails session={session}/>
       </div>
     </aside>
   );
@@ -31,9 +38,9 @@ const Sidebar = async () => {
 
 export default Sidebar;
 
-const UserDetails = ({ session }: { session: AuthSession }) => {
+const UserDetails = ({session}: { session: AuthSession }) => {
   if (session.session === null) return null;
-  const { user } = session.session;
+  const {user} = session.session;
 
   if (!user?.name || user.name.length == 0) return null;
 

@@ -1,25 +1,25 @@
 import {db} from "@/lib/db/index";
 import {
   GastoId,
+  gastoIdSchema,
+  insertGastoSchema,
   NewGastoParams,
   UpdateGastoParams,
   updateGastoSchema,
-  insertGastoSchema,
-  gastoIdSchema,
 } from "@/lib/db/schema/gastos";
-import {AuthSession,getUserAuth} from "@/lib/auth/utils";
-import { sendEmail } from "@/lib/mail";
+import {AuthSession, getUserAuth} from "@/lib/auth/utils";
+import {sendEmail} from "@/lib/mail";
 
-export const createGasto = async (gasto: NewGastoParams) => {
-  const newGasto = insertGastoSchema.parse(gasto);
+export const createGasto = async (newGastoData: NewGastoParams) => {
+  const newGasto = insertGastoSchema.parse(newGastoData);
 
-  const deudas = gasto?.deudoresIds.map((deudorId) => ({
+  const deudas = newGastoData?.deudoresIds.map((deudorId) => ({
     deudor: {connect: {id: deudorId}},
-    monto: newGasto.monto / gasto?.deudoresIds.length,
+    monto: newGasto.monto / newGastoData?.deudoresIds.length,
   }));
 
   try {
-    const g = await db.gasto.create({
+    const gasto = await db.gasto.create({
       data: {
         ...newGasto,
         deudas: {
@@ -28,31 +28,28 @@ export const createGasto = async (gasto: NewGastoParams) => {
       },
       include: {
         pagador: {
-          select: { name: true },
+          select: {name: true},
         },
       },
     });
 
     const evento = await db.evento.findFirst({
-      where: { id: g.eventoId },
-      include: { participantes: true },
+      where: {id: gasto.eventoId},
+      include: {participantes: true},
     });
-    const emails = evento?.participantes.map((p) => p.email) || [];
-    sendEmail({
-      bcc: emails,
-      subject: `Nuevo gasto en ${evento?.nombre}`,
-      html: `${g.pagador.name} creó el gasto ${g.nombre} en el evento ${evento?.nombre} por un monto de $${g.monto}.`,
-    });
-    return { gasto: g };
+
+    await notifyAllEventParticipants(evento, gasto);
+
+    return {gasto: gasto};
   } catch (err) {
     const message = (err as Error).message ?? "Error, please try again";
     console.error(message);
-    throw { error: message };
+    throw {error: message};
   }
 };
 
 export const updateGasto = async (id: GastoId, updatedGastoData: UpdateGastoParams) => {
-  const { session } = await getUserAuth();
+  const {session} = await getUserAuth();
   const {id: gastoToUpdateId} = gastoIdSchema.parse({id});
   const existingGasto = await db.gasto.findFirst({
     where: {id: gastoToUpdateId},
@@ -107,20 +104,20 @@ export const updateGasto = async (id: GastoId, updatedGastoData: UpdateGastoPara
 };
 
 export const deleteGasto = async (id: GastoId) => {
-  const { session } = await getUserAuth();
-  const { id: gastoId } = gastoIdSchema.parse({ id });
+  const {session} = await getUserAuth();
+  const {id: gastoId} = gastoIdSchema.parse({id});
 
   await validateAction(gastoId, session);
 
   try {
     const g = await db.gasto.delete({
-      where: { id: gastoId },
+      where: {id: gastoId},
     });
-    return { gasto: g };
+    return {gasto: g};
   } catch (err) {
     const message = (err as Error).message ?? "Error, please try again";
     console.error(message);
-    throw { error: message };
+    throw {error: message};
   }
 };
 
@@ -130,19 +127,41 @@ const validateAction = async (
   session: AuthSession["session"]
 ) => {
   const evento = await db.evento.findFirst({
-    where: { gastos: { some: { id: gastoId } } },
-    select: { userId: true },
+    where: {gastos: {some: {id: gastoId}}},
+    select: {userId: true},
   });
 
   const gasto = await db.gasto.findFirst({
-    where: { id: gastoId },
-    select: { pagadorId: true },
+    where: {id: gastoId},
+    select: {pagadorId: true},
   });
 
   if (
     session?.user.id !== evento?.userId &&
     session?.user.id !== gasto?.pagadorId
   ) {
-    throw { error: "You don't have permission to perform this action" };
+    throw {error: "You don't have permission to perform this action"};
   }
 };
+
+async function notifyAllEventParticipants(evento: any, gasto: any) {
+  const gastoCreationMessage = `${gasto.pagador.name} creó el gasto ${gasto.nombre} en el evento ${evento?.nombre} por un monto de $${gasto.monto}.`;
+
+  const allParticipantsEmails = evento?.participantes?.map((p: any) => p.email) || [];
+  sendEmail({
+    bcc: allParticipantsEmails,
+    subject: `Nuevo gasto en ${evento?.nombre}`,
+    html: gastoCreationMessage,
+  });
+
+  for (const participant of evento?.participantes) {
+    await db.notification.create({
+      data: {
+        userId: participant.id,
+        message: gastoCreationMessage,
+        read: false,
+        eventoId: evento.id,
+      },
+    })
+  }
+}
