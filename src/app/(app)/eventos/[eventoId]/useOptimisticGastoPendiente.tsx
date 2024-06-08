@@ -16,12 +16,11 @@ export const useOptimisticGastoPendientes = (
       (
         currentState: CompleteGastoPendiente[],
         action: OptimisticAction<GastoPendiente>
-      ): CompleteGastoPendiente[] => {
+      ): any[] => {
         const { data } = action;
 
         const optimisticGastoPendiente = {
           ...data,
-
           id: "optimistic",
         };
 

@@ -18,12 +18,10 @@ export default function GastoPendienteList({
   participantes,
   gastosPendientes,
   evento,
-  sessionUserId,
 }: {
   participantes: any;
   gastosPendientes: any;
   evento?: any;
-  sessionUserId: string;
 }) {
   const { optimisticGastoPendientes, addOptimisticGastoPendiente } =
     useOptimisticGastoPendientes(gastosPendientes);
@@ -62,11 +60,7 @@ export default function GastoPendienteList({
         <EmptyState openModal={openModal} />
       ) : (
         <DataTable
-          columns={createColumns(
-            participantes,
-            sessionUserId,
-            evento?.userId == sessionUserId
-          )}
+          columns={createColumns(participantes)}
           data={optimisticGastoPendientes}
           searchable
         >

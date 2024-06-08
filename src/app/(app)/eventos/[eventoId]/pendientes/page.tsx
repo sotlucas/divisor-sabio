@@ -18,7 +18,6 @@ export default async function PendientesPage({
 
 const Pendientes = async ({ eventoId }: { eventoId: string }) => {
   await checkAuth();
-  const { session } = await getUserAuth();
 
   const { evento, gastosPendientes, participantes } =
     await getEventoByIdWithGastosPendientes(eventoId);
@@ -30,7 +29,6 @@ const Pendientes = async ({ eventoId }: { eventoId: string }) => {
         participantes={participantes}
         gastosPendientes={gastosPendientes}
         evento={evento}
-        sessionUserId={session?.user.id!}
       />
     </div>
   );

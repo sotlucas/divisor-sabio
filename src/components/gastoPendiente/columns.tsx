@@ -5,18 +5,18 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Edit } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { CompleteGasto } from "@/lib/db/schema/gastos";
 import Modal from "../shared/Modal";
 import { useOptimistic, useState } from "react";
 import { TAddOptimistic } from "@/app/(app)/eventos/[eventoId]/useOptimisticGastoPendiente";
 import GastoPendienteForm from "./GastoPendienteForm";
-import { GastoPendiente } from "@/lib/db/schema/gastoPendiente";
+import {
+  CompleteGastoPendiente,
+  GastoPendiente,
+} from "@/lib/db/schema/gastoPendiente";
 
 export const createColumns = (
-  participantes: any,
-  sessionUserId: string,
-  isOwner: Boolean
-): ColumnDef<CompleteGasto>[] => {
+  participantes: any
+): ColumnDef<CompleteGastoPendiente>[] => {
   return [
     {
       accessorKey: "nombre",
@@ -36,7 +36,6 @@ export const createColumns = (
     {
       id: "actions",
       cell: ({ row }) => {
-        if (sessionUserId !== row.original.pagadorId && !isOwner) return null;
         return <Actions row={row} participantes={participantes} />;
       },
     },
