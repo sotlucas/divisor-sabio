@@ -110,7 +110,6 @@ const GastoForm = ({
       ...payload,
     });
     if (!gastoParsed.success) {
-      console.log("ASD", gastoParsed.error.flatten().fieldErrors);
       setErrors(gastoParsed?.error.flatten().fieldErrors);
       return;
     }

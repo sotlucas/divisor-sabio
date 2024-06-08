@@ -1,5 +1,5 @@
 import * as z from "zod"
-import { CompleteGasto, relatedGastoSchema, CompleteUser, relatedUserSchema } from "./index"
+import { CompleteGasto, relatedGastoSchema, CompleteUser, relatedUserSchema, CompleteGastoPendiente, relatedGastoPendienteSchema } from "./index"
 
 export const eventoSchema = z.object({
   id: z.string(),
@@ -14,6 +14,7 @@ export const eventoSchema = z.object({
 export interface CompleteEvento extends z.infer<typeof eventoSchema> {
   gastos: CompleteGasto[]
   participantes: CompleteUser[]
+  pendientes: CompleteGastoPendiente[]
 }
 
 /**
@@ -24,4 +25,5 @@ export interface CompleteEvento extends z.infer<typeof eventoSchema> {
 export const relatedEventoSchema: z.ZodSchema<CompleteEvento> = z.lazy(() => eventoSchema.extend({
   gastos: relatedGastoSchema.array(),
   participantes: relatedUserSchema.array(),
+  pendientes: relatedGastoPendienteSchema.array(),
 }))

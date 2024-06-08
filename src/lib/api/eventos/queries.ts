@@ -60,3 +60,31 @@ export const getEventoByIdWithGastos = async (id: EventoId) => {
 
   return { evento, participantes, gastos: gastos };
 };
+
+export const getEventoByIdWithGastosPendientes = async (id: EventoId) => {
+  const { session } = await getUserAuth();
+  const { id: eventoId } = eventoIdSchema.parse({ id });
+  const e = await db.evento.findFirst({
+    where: {
+      id: eventoId,
+      participantes: {
+        some: {
+          id: session?.user.id!,
+        },
+      },
+    },
+    include: {
+      pendientes: {
+        include: {
+          evento: true,
+          responsable: { select: { id: true, name: true, email: true } },
+        },
+      },
+      participantes: { select: { id: true, name: true, email: true } },
+    },
+  });
+  if (e === null) return { evento: null };
+  const { pendientes, participantes, ...evento } = e;
+
+  return { evento, participantes, gastosPendientes: pendientes };
+};
