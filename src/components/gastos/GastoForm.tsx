@@ -43,11 +43,13 @@ import { es } from "date-fns/locale";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SaveButton } from "@/components/SaveButton";
 import { DeleteButton } from "@/components/DeleteButton";
+import { deleteGastoPendienteAction } from "@/lib/actions/gastoPendiente";
 
 const GastoForm = ({
   participantes,
   eventoId,
   gasto,
+  gasto_pendiente,
   openModal,
   closeModal,
   addOptimistic,
@@ -56,6 +58,7 @@ const GastoForm = ({
   participantes?: any[];
   gasto?: any;
   eventoId?: EventoId;
+  gasto_pendiente?: any;
   openModal?: (gasto?: Gasto) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
@@ -96,6 +99,15 @@ const GastoForm = ({
       if (action === "create") toast.success("Gasto creado!");
       if (action === "update") toast.success("Gasto actualizado!");
     }
+
+    if (gasto_pendiente) {
+      startMutation(async () => {
+        const error = await deleteGastoPendienteAction(gasto_pendiente?.id);
+        const errorFormatted = {
+          error: error ?? "Error",
+        };
+      });
+    }
   };
 
   const handleSubmit = async (data: FormData) => {
@@ -104,6 +116,7 @@ const GastoForm = ({
     const payload = Object.fromEntries(data.entries());
     const gastoParsed = await insertGastoParams.safeParseAsync({
       eventoId,
+      nombre: gasto_pendiente?.nombre ?? payload.nombre,
       deudoresIds: deudoresGastoNuevoOEditado ?? [],
       pagadorId: payload.pagadorId ?? gasto?.pagadorId,
       esDeudaPagada: gasto?.esDeudaPagada ?? false,
@@ -182,8 +195,9 @@ const GastoForm = ({
           type="text"
           name="nombre"
           placeholder="Carne"
+          disabled={gasto_pendiente ? true : false}
           className={cn(errors?.nombre ? "ring ring-destructive" : "")}
-          defaultValue={gasto?.nombre ?? ""}
+          defaultValue={gasto?.nombre || gasto_pendiente?.nombre || ""}
           required
         />
         {errors?.nombre ? (
@@ -231,7 +245,7 @@ const GastoForm = ({
         <Popover>
           <Input
             name="fecha"
-            onChange={() => {}}
+            onChange={() => { }}
             readOnly
             value={fecha?.toUTCString() ?? new Date().toUTCString()}
             className="hidden"
@@ -302,14 +316,14 @@ const GastoForm = ({
 
                     return checked
                       ? setDeudoresGastoNuevoOEditado([
-                          ...deudoresGastoNuevoOEditado,
-                          idParticipanteActual,
-                        ])
+                        ...deudoresGastoNuevoOEditado,
+                        idParticipanteActual,
+                      ])
                       : setDeudoresGastoNuevoOEditado(
-                          deudoresGastoNuevoOEditado?.filter(
-                            (deudorId) => deudorId !== idParticipanteActual
-                          )
-                        );
+                        deudoresGastoNuevoOEditado?.filter(
+                          (deudorId) => deudorId !== idParticipanteActual
+                        )
+                      );
                   }}
                   className={cn(
                     errors?.deudoresIds

@@ -9,7 +9,6 @@ const baseSchema = gastoPendienteSchema.omit(timestamps);
 export const insertGastoPendienteSchema = baseSchema.omit({ id: true });
 export const insertGastoPendienteParams = baseSchema
   .extend({
-    monto: z.coerce.number(),
     eventoId: z.coerce.string().min(1),
   })
   .omit({
@@ -18,7 +17,6 @@ export const insertGastoPendienteParams = baseSchema
 
 export const updateGastoPendienteSchema = baseSchema;
 export const updateGastoPendienteParams = updateGastoPendienteSchema.extend({
-  monto: z.coerce.number(),
   eventoId: z.coerce.string().min(1),
 });
 export const gastoPendienteIdSchema = baseSchema.pick({ id: true });

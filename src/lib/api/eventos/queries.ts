@@ -77,7 +77,6 @@ export const getEventoByIdWithGastosPendientes = async (id: EventoId) => {
       pendientes: {
         include: {
           evento: true,
-          responsable: { select: { id: true, name: true, email: true } },
         },
       },
       participantes: { select: { id: true, name: true, email: true } },

@@ -82,14 +82,13 @@ model Deuda {
 }
 
 model GastoPendiente {
-  id            String  @id @default(cuid())
-  nombre        String
-  monto         Int
-  responsable   User?   @relation(fields: [responsableId], references: [id])
-  responsableId String?
-  evento        Evento? @relation(fields: [eventoId], references: [id])
-  eventoId      String?
+  id       String  @id @default(cuid())
+  nombre   String
+  evento   Evento? @relation(fields: [eventoId], references: [id])
+  eventoId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
 }

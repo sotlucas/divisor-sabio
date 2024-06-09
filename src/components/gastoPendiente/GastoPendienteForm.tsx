@@ -20,13 +20,6 @@ import {
   deleteGastoPendienteAction,
   updateGastoPendienteAction,
 } from "@/lib/actions/gastoPendiente";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import { SaveButton } from "../SaveButton";
 import { EventoId } from "@/lib/db/schema/eventos";
 import { DeleteButton } from "../DeleteButton";
@@ -83,6 +76,7 @@ const GastoPendienteForm = ({
     const gastoPendienteParsed =
       await insertGastoPendienteParams.safeParseAsync({ eventoId, ...payload });
     if (!gastoPendienteParsed.success) {
+      console.log(gastoPendienteParsed.error.flatten().fieldErrors);
       setErrors(gastoPendienteParsed?.error.flatten().fieldErrors);
       return;
     }
@@ -105,9 +99,9 @@ const GastoPendienteForm = ({
 
         const error = editing
           ? await updateGastoPendienteAction({
-              ...values,
-              id: gastoPendiente.id,
-            })
+            ...values,
+            id: gastoPendiente.id,
+          })
           : await createGastoPendienteAction(values);
 
         const errorFormatted = {
@@ -164,68 +158,6 @@ const GastoPendienteForm = ({
         />
         {errors?.nombre ? (
           <p className="text-xs text-destructive mt-2">{errors.nombre[0]}</p>
-        ) : (
-          <div className="h-6" />
-        )}
-      </div>
-      <div>
-        <Label
-          className={cn(
-            "mb-2 inline-block",
-            errors?.monto ? "text-destructive" : ""
-          )}
-        >
-          Monto
-        </Label>
-        <Input
-          type="text"
-          name="monto"
-          placeholder="0.00"
-          className={cn(errors?.monto ? "ring ring-destructive" : "")}
-          defaultValue={gastoPendiente?.monto ?? ""}
-          required
-        />
-        {errors?.monto ? (
-          <p className="text-xs text-destructive mt-2">{errors.monto[0]}</p>
-        ) : (
-          <div className="h-6" />
-        )}
-      </div>
-      <div>
-        <Label
-          className={cn(
-            "mb-2 inline-block",
-            errors?.responsableId ? "text-destructive" : ""
-          )}
-        >
-          Responsable
-        </Label>
-        <Select
-          defaultValue={gastoPendiente?.responsableId as string}
-          name="responsableId"
-          disabled={editing}
-          required
-        >
-          <SelectTrigger
-            className={cn(errors?.responsableId ? "ring ring-destructive" : "")}
-          >
-            <SelectValue placeholder="Seleccionar participante" />
-          </SelectTrigger>
-          <SelectContent>
-            {participantes?.map((participante) => (
-              <SelectItem
-                key={participante.id}
-                value={participante.id.toString()}
-              >
-                {participante.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {errors?.responsableId ? (
-          <p className="text-xs text-destructive mt-2">
-            {errors.responsableId[0]}
-          </p>
         ) : (
           <div className="h-6" />
         )}
