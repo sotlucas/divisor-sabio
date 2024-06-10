@@ -11,6 +11,7 @@ import Modal from "../shared/Modal";
 import GastoForm from "./GastoForm";
 import { useOptimistic, useState } from "react";
 import { TAddOptimistic } from "@/app/(app)/eventos/[eventoId]/useOptimisticGastos";
+import { TooltipContent, TooltipProvider, Tooltip, TooltipTrigger } from "../ui/tooltip";
 
 export const createColumns = (
   participantes: any[],
@@ -84,9 +85,18 @@ function Actions({ row, participantes }: any) {
           addOptimistic={updateGasto}
         />
       </Modal>
-      <Button variant="outline" size="icon" onClick={() => setOpen(true)}>
-        <Edit className="h-4 w-4" />
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" size="icon" onClick={() => setOpen(true)}>
+              <Edit className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Editar</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   );
 }

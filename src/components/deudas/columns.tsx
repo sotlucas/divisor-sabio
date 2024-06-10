@@ -5,6 +5,7 @@ import DeudaForm from "./DeudaForm";
 import { useState } from "react";
 import { CompleteDeuda } from "prisma/zod/deuda";
 import { Receipt } from "lucide-react";
+import { TooltipContent, TooltipProvider, Tooltip, TooltipTrigger } from "../ui/tooltip";
 
 export const createColumns = (
   evento: any[],
@@ -56,9 +57,18 @@ function Actions({ row, evento, participantes }: any) {
             closeModal={() => setOpen(false)}
           />
         </Modal>
-        <Button size="icon" variant="outline" onClick={() => setOpen(true)}>
-          <Receipt className="h-5 w-5" />
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button size="icon" variant="outline" onClick={() => setOpen(true)}>
+                <Receipt className="h-5 w-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Liquidar deuda</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </>
     </div>
   );
