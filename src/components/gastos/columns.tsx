@@ -56,8 +56,8 @@ export const createColumns = (
     {
       id: "actions",
       cell: ({ row }) => {
-        if (sessionUserId !== row.original.pagadorId && !isOwner) return null
-        return <Actions row={row} participantes={participantes}/>;
+        // if (sessionUserId !== row.original.pagadorId && !isOwner) return null
+        return <Actions row={row} participantes={participantes} />;
       },
     },
   ];
