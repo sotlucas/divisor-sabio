@@ -17,28 +17,42 @@ import GastoForm from "../gastos/GastoForm";
 
 export const createColumns = (
   participantes: any
-): ColumnDef<CompleteGastoPendiente>[] => {
+): ColumnDef<any>[] => {
   return [
     {
       accessorKey: "nombre",
       header: "Nombre",
     },
     {
-      id: "actions_create_gasto",
+      accessorKey: "responsable",
+      header: "Responsable",
       cell: ({ row }) => {
-        return <ActionsCreateGasto row={row} participantes={participantes} />;
-      },
+        if (row.original?.responsable?.name) {
+          return <span>{row.original.responsable.name}</span>;
+        } else {
+          return <span className="italic text-muted-foreground">Sin responsable</span>;
+        }
+      }
     },
     {
       id: "actions",
       cell: ({ row }) => {
-        return <Actions row={row} />;
+        return <Actions row={row} participantes={participantes} />;
       },
     },
   ];
 };
 
-function ActionsCreateGasto({ row, participantes, id }: any) {
+function Actions({ row, participantes }: any) {
+  return (
+    <div className="flex space-x-2">
+      <CreateGasto row={row} participantes={participantes} />
+      <EditGastoPendiente row={row} participantes={participantes} />
+    </div>
+  );
+}
+
+function CreateGasto({ row, participantes, id }: any) {
   const [open, setOpen] = useState(false);
   const openModal = (_?: GastoPendiente) => {
     setOpen(true);
@@ -57,7 +71,7 @@ function ActionsCreateGasto({ row, participantes, id }: any) {
           closeModal={closeModal}
           openModal={openModal}
           addOptimistic={updateGasto}
-          gasto_pendiente={{ id: row.original.id, nombre: row.original.nombre }}
+          gastoPendiente={{ id: row.original.id, nombre: row.original.nombre, responsableId: row.original.responsableId }}
         />
       </Modal>
       <Button variant="outline" size="icon" onClick={() => setOpen(true)}>
@@ -68,7 +82,7 @@ function ActionsCreateGasto({ row, participantes, id }: any) {
 }
 
 
-function Actions({ row }: any) {
+function EditGastoPendiente({ row, participantes }: any) {
   const [open, setOpen] = useState(false);
   const openModal = (_?: GastoPendiente) => {
     setOpen(true);
@@ -84,6 +98,7 @@ function Actions({ row }: any) {
         <GastoPendienteForm
           gastoPendiente={optimisticGasto}
           eventoId={row.original.eventoId}
+          participantes={participantes}
           closeModal={closeModal}
           openModal={openModal}
           addOptimistic={updateGasto}

@@ -1,7 +1,7 @@
 import { gastoPendienteSchema } from "@/zodAutoGenSchemas";
 import { z } from "zod";
 import { timestamps } from "@/lib/utils";
-import { getGastoPendientes } from "@/lib/api/gastoPendiente/queries";
+import { getGastoPendientes, } from "@/lib/api/gastoPendiente/queries";
 
 // Schema for gastoPendiente - used to validate API requests
 const baseSchema = gastoPendienteSchema.omit(timestamps);
@@ -10,6 +10,7 @@ export const insertGastoPendienteSchema = baseSchema.omit({ id: true });
 export const insertGastoPendienteParams = baseSchema
   .extend({
     eventoId: z.coerce.string().min(1),
+    responsableId: z.coerce.string().optional()
   })
   .omit({
     id: true,
@@ -18,6 +19,7 @@ export const insertGastoPendienteParams = baseSchema
 export const updateGastoPendienteSchema = baseSchema;
 export const updateGastoPendienteParams = updateGastoPendienteSchema.extend({
   eventoId: z.coerce.string().min(1),
+  responsableId: z.coerce.string().optional(),
 });
 export const gastoPendienteIdSchema = baseSchema.pick({ id: true });
 

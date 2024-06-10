@@ -5,14 +5,14 @@ export const gastoPendienteSchema = z.object({
   id: z.string(),
   nombre: z.string(),
   eventoId: z.string().nullish(),
+  responsableId: z.string().nullish(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  userId: z.string().nullish(),
 })
 
 export interface CompleteGastoPendiente extends z.infer<typeof gastoPendienteSchema> {
   evento?: CompleteEvento | null
-  User?: CompleteUser | null
+  responsable?: CompleteUser | null
 }
 
 /**
@@ -22,5 +22,5 @@ export interface CompleteGastoPendiente extends z.infer<typeof gastoPendienteSch
  */
 export const relatedGastoPendienteSchema: z.ZodSchema<CompleteGastoPendiente> = z.lazy(() => gastoPendienteSchema.extend({
   evento: relatedEventoSchema.nullish(),
-  User: relatedUserSchema.nullish(),
+  responsable: relatedUserSchema.nullish(),
 }))

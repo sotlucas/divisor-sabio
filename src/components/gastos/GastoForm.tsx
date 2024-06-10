@@ -49,7 +49,7 @@ const GastoForm = ({
   participantes,
   eventoId,
   gasto,
-  gasto_pendiente,
+  gastoPendiente,
   openModal,
   closeModal,
   addOptimistic,
@@ -58,7 +58,7 @@ const GastoForm = ({
   participantes?: any[];
   gasto?: any;
   eventoId?: EventoId;
-  gasto_pendiente?: any;
+  gastoPendiente?: any;
   openModal?: (gasto?: Gasto) => void;
   closeModal?: () => void;
   addOptimistic?: TAddOptimistic;
@@ -100,9 +100,9 @@ const GastoForm = ({
       if (action === "update") toast.success("Gasto actualizado!");
     }
 
-    if (gasto_pendiente) {
+    if (gastoPendiente) {
       startMutation(async () => {
-        const error = await deleteGastoPendienteAction(gasto_pendiente?.id);
+        const error = await deleteGastoPendienteAction(gastoPendiente?.id);
         const errorFormatted = {
           error: error ?? "Error",
         };
@@ -116,7 +116,7 @@ const GastoForm = ({
     const payload = Object.fromEntries(data.entries());
     const gastoParsed = await insertGastoParams.safeParseAsync({
       eventoId,
-      nombre: gasto_pendiente?.nombre ?? payload.nombre,
+      nombre: gastoPendiente?.nombre ?? payload.nombre,
       deudoresIds: deudoresGastoNuevoOEditado ?? [],
       pagadorId: payload.pagadorId ?? gasto?.pagadorId,
       esDeudaPagada: gasto?.esDeudaPagada ?? false,
@@ -195,9 +195,9 @@ const GastoForm = ({
           type="text"
           name="nombre"
           placeholder="Carne"
-          disabled={gasto_pendiente ? true : false}
+          disabled={gastoPendiente ? true : false}
           className={cn(errors?.nombre ? "ring ring-destructive" : "")}
-          defaultValue={gasto?.nombre || gasto_pendiente?.nombre || ""}
+          defaultValue={gasto?.nombre || gastoPendiente?.nombre || ""}
           required
         />
         {errors?.nombre ? (
@@ -359,7 +359,7 @@ const GastoForm = ({
           Pagado por
         </Label>
         <Select
-          defaultValue={gasto?.pagadorId}
+          defaultValue={gasto?.pagadorId || gastoPendiente?.responsableId || undefined}
           name="pagadorId"
           disabled={editing}
           required

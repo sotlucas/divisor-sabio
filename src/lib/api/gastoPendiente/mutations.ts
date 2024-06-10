@@ -11,9 +11,7 @@ import {
 export const createGastoPendiente = async (
   gastoPendiente: NewGastoPendienteParams
 ) => {
-  console.log("PRE", gastoPendiente);
   const newGastoPendiente = insertGastoPendienteSchema.parse(gastoPendiente);
-  console.log("DSADAS", newGastoPendiente);
   try {
     const g = await db.gastoPendiente.create({ data: newGastoPendiente });
     return { gastoPendiente: g };
