@@ -166,3 +166,42 @@ export const getGastosWithoutPayedDebts = async (
 
 }
 
+export const getParticipantesActivosByEvento = async (
+  id: EventoId
+): Promise<{ participantesConActividad: string[] }> => {
+  const { id: eventoId } = eventoIdSchema.parse({ id });
+  const evento = await db.evento.findFirst({
+    where: {
+      id: eventoId,
+    },
+    include: {
+      gastos: {
+        include: {
+          deudas: {
+            select: {
+              deudorId: true,
+              monto: true,
+            },
+          },
+        },
+      },
+      participantes: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  const participantesConActividad: string[] = [];
+
+  evento?.gastos.forEach((gasto) => {
+    participantesConActividad.push(gasto.pagadorId);
+    gasto.deudas.forEach((deuda) => {
+      participantesConActividad.push(deuda.deudorId);
+    });
+  });
+
+  return { participantesConActividad };
+}

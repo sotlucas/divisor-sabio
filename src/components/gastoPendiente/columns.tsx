@@ -14,7 +14,7 @@ import {
   GastoPendiente,
 } from "@/lib/db/schema/gastoPendiente";
 import GastoForm from "../gastos/GastoForm";
-import { TooltipContent, TooltipProvider, Tooltip, TooltipTrigger } from "../ui/tooltip";
+import { Tooltip } from "@/components/shared/Tooltip";
 
 export const createColumns = (
   participantes: any
@@ -75,18 +75,11 @@ function CreateGasto({ row, participantes, id }: any) {
           gastoPendiente={{ id: row.original.id, nombre: row.original.nombre, responsableId: row.original.responsableId }}
         />
       </Modal>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="outline" size="icon" onClick={() => setOpen(true)}>
-              <Receipt className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Crear gasto</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip text="Crear gasto">
+        <Button variant="outline" size="icon" onClick={() => setOpen(true)}>
+          <Receipt className="h-4 w-4" />
+        </Button>
+      </Tooltip>
     </div>
   );
 }
@@ -114,18 +107,11 @@ function EditGastoPendiente({ row, participantes }: any) {
           addOptimistic={updateGasto}
         />
       </Modal>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button variant="outline" size="icon" onClick={() => setOpen(true)}>
-              <Edit className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Editar</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip text="Editar">
+        <Button variant="outline" size="icon" onClick={() => setOpen(true)}>
+          <Edit className="h-4 w-4" />
+        </Button>
+      </Tooltip>
     </div>
   );
 }

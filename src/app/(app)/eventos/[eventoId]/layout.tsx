@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ChevronLeftIcon } from "lucide-react";
 import OptimisticBalances from "./(components)/OptimisticBalances";
-import { getBalancesByEvento } from "@/lib/api/calculadora/queries";
+import { getBalancesByEvento, getParticipantesActivosByEvento } from "@/lib/api/calculadora/queries";
 import OptimisticLiquidarDeudas from "./(components)/OptimisticLiquidarDeudas";
 
 export const revalidate = 0;
@@ -36,6 +36,8 @@ const Evento = async ({ id, children }: { id: string; children: any }) => {
 
   const { evento, participantes } = await getEventoByIdWithGastos(id);
   const { balances } = await getBalancesByEvento(id);
+
+  const { participantesConActividad } = await getParticipantesActivosByEvento(id);
 
   if (!evento) notFound();
   const eventOwnerId = evento.userId;
@@ -66,6 +68,7 @@ const Evento = async ({ id, children }: { id: string; children: any }) => {
             evento={evento}
             isOwner={session?.user.id == eventOwnerId}
             ownerId={eventOwnerId}
+            participantesConActividad={participantesConActividad}
           />
         </div>
       </div>

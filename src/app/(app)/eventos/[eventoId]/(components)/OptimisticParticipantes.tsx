@@ -12,7 +12,8 @@ export default function OptimisticParticipantes({
   participantes,
   evento,
   isOwner,
-  ownerId
+  ownerId,
+  participantesConActividad
 }: {
   participantes: {
     id: string;
@@ -22,13 +23,14 @@ export default function OptimisticParticipantes({
   evento: Evento;
   isOwner: Boolean;
   ownerId: string;
+  participantesConActividad: string[];
 }) {
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <Modal open={open} setOpen={setOpen} title="Participantes">
-        <ParticipanteList participantes={participantes} evento={evento} isOwner={isOwner} ownerId={ownerId}/>
+        <ParticipanteList participantes={participantes} evento={evento} isOwner={isOwner} ownerId={ownerId} participantesConActividad={participantesConActividad} />
       </Modal>
       <Button variant="outline" onClick={() => setOpen(true)}>
         Participantes
