@@ -19,6 +19,7 @@ export function GroupedTabs({ eventoId }: { eventoId: string }) {
         <TabsTrigger value="gastos">Gastos</TabsTrigger>
         <TabsTrigger value="deudas">Deudas</TabsTrigger>
         <TabsTrigger value="estadisticas">Estadísticas</TabsTrigger>
+        <TabsTrigger value="pendientes">Pendientes</TabsTrigger>
       </TabsList>
     </Tabs>
   );
