@@ -17,6 +17,7 @@ export default function ParticipanteList({
   evento,
   isOwner,
   ownerId,
+  participantesConActividad,
 }: {
   participantes: {
     name: string | null;
@@ -25,6 +26,7 @@ export default function ParticipanteList({
   evento: Evento;
   isOwner: Boolean;
   ownerId: string;
+  participantesConActividad: string[];
 }) {
   const { optimisticParticipantes, addOptimisticParticipantes } =
     useOptimisticParticipantes(participantes);
@@ -49,10 +51,10 @@ export default function ParticipanteList({
                 <div className="flex items-center justify-center">
                   {
                     isEventOwner && (
-                    <span className="text-xs text-white font-medium bg-green-700 whitespace-nowrap p-1 pr-2 pl-2 rounded">
-                      Administrador
-                    </span>
-                  )}
+                      <span className="text-xs text-white font-medium bg-green-700 whitespace-nowrap p-1 pr-2 pl-2 rounded">
+                        Administrador
+                      </span>
+                    )}
                 </div>
               );
             },
@@ -60,7 +62,12 @@ export default function ParticipanteList({
           {
             id: "actions",
             cell: ({ row }) => {
+              // Si el usuario no es el dueño del evento no se pueden eliminar participantes
               if (!isOwner) return null
+              // Si el participante es el dueño del evento no se puede eliminar
+              if (row.original.id == ownerId) return null
+              // Si el participante tiene actividad no se puede eliminar
+              if (participantesConActividad.includes(row.original.id)) return null
               return (
                 <Actions
                   row={row}
