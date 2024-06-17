@@ -41,3 +41,17 @@ export const disableNotifications = async () => {
     },
   });
 };
+
+export const getNotificationsConfig = async () => {
+  const { session } = await getUserAuth();
+  if (!session) {
+    return { recibirNotificaciones: false };
+  }
+
+  const user = await db.user.findFirst({
+    where: { id: session?.user.id },
+    select: { recibirNotificaciones: true },
+  });
+
+  return { recibirNotificaciones: user?.recibirNotificaciones ?? false };
+};

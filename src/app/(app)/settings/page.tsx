@@ -7,14 +7,25 @@ import { useTheme } from "next-themes";
 import {
   disableNotificationsAction,
   enableNotificationsAction,
+  getNotificationsConfigAction,
 } from "@/lib/actions/notifications";
 
 export default function Page() {
   const { setTheme } = useTheme();
   const [enableNotifications, setEnableNotifications] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   const [_isPending, startMutation] = useTransition();
 
   useEffect(() => {
+    startMutation(async () => {
+      const config = await getNotificationsConfigAction();
+      setEnableNotifications(config?.recibirNotificaciones);
+      setLoaded(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!loaded) return;
     if (enableNotifications) {
       startMutation(async () => {
         await enableNotificationsAction();
@@ -24,7 +35,7 @@ export default function Page() {
         await disableNotificationsAction();
       });
     }
-  }, [enableNotifications]);
+  }, [enableNotifications, loaded]);
 
   return (
     <div>
