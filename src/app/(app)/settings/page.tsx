@@ -1,10 +1,31 @@
 "use client";
 
+import { useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { useTheme } from "next-themes";
+import {
+  disableNotificationsAction,
+  enableNotificationsAction,
+} from "@/lib/actions/notifications";
 
 export default function Page() {
   const { setTheme } = useTheme();
+  const [enableNotifications, setEnableNotifications] = useState(true);
+  const [_isPending, startMutation] = useTransition();
+
+  useEffect(() => {
+    if (enableNotifications) {
+      startMutation(async () => {
+        await enableNotificationsAction();
+      });
+    } else {
+      startMutation(async () => {
+        await disableNotificationsAction();
+      });
+    }
+  }, [enableNotifications]);
+
   return (
     <div>
       <h1 className="text-2xl font-semibold">Configuración</h1>
@@ -12,7 +33,8 @@ export default function Page() {
         <div>
           <h3 className="text-lg font-medium">Tema</h3>
           <p className="text-sm text-muted-foreground">
-            Personalice el tema de la app. Cambie inmediatamente entre tema claro y oscuro.
+            Personalice el tema de la app. Cambie inmediatamente entre tema
+            claro y oscuro.
           </p>
         </div>
         <Button
@@ -99,6 +121,20 @@ export default function Page() {
             </span>
           </div>
         </Button>
+        <div className="flex flex-row items-center justify-between rounded-lg border p-4 max-w-[600px]">
+          <div className="space-y-0.5">
+            <h3 className="text-xl font-semibold">Notificaciones</h3>
+            <p className="text-muted-foreground">
+              Activar o desactivar notificaciones.
+            </p>
+          </div>
+          <div>
+            <Switch
+              checked={enableNotifications}
+              onCheckedChange={(checked) => setEnableNotifications(checked)}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
