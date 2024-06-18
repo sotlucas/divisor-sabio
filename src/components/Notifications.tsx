@@ -5,10 +5,12 @@ import {OpenNotificationsButton} from "@/components/OpenNotificationsButton";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {NotificationsList} from "@/components/NotificationsList";
 import {MarkAllNotificationsAsReadButton} from "@/components/MarkAllNotificationsAsReadButton";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useTransition} from "react";
+import {markAllNotificationsAsReadAction} from "@/lib/actions/notifications";
 
 export default function Notifications() {
   const [notifications, setNotifications] = useState([]);
+  const [_pending, startMutation] = useTransition();
   const notificationsAmount = notifications.length;
 
   useEffect(() => {
@@ -31,6 +33,12 @@ export default function Notifications() {
     }
   }
 
+  function handleMarkAllAsRead() {
+    setNotifications([]);
+
+    markAllNotificationsAsReadAction();
+  }
+
   return (
     <Popover>
       <PopoverTrigger className={"w-full"}>
@@ -48,7 +56,7 @@ export default function Notifications() {
             <NotificationsList notifications={notifications}/>
           </CardContent>
           <CardFooter>
-            <MarkAllNotificationsAsReadButton/>
+            <MarkAllNotificationsAsReadButton onClick={handleMarkAllAsRead}/>
           </CardFooter>
         </Card>
       </PopoverContent>
