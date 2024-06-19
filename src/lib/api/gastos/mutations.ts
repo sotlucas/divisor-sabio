@@ -169,8 +169,8 @@ async function notifyAllEventParticipants(evento: any, gasto: any) {
   if (participantsNotificationsEnabled.length > 0) {
     sendEmail({
       bcc: allParticipantsEmails,
-      subject: `Nuevo gasto en ${evento?.nombre}`,
-      html: gastoCreationMessage,
+      subject,
+      html: message,
     });
   }
 
