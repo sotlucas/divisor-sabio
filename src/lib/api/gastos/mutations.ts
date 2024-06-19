@@ -160,15 +160,21 @@ async function notifyAllEventParticipants(evento: any, gasto: any) {
     subject = `Nuevo gasto en ${evento?.nombre}`;
   }
 
-  const allParticipantsEmails =
-    evento?.participantes?.map((p: any) => p.email) || [];
-  sendEmail({
-    bcc: allParticipantsEmails,
-    subject,
-    html: message,
-  });
+  const participantsNotificationsEnabled = evento?.participantes?.filter(
+    (p: any) => p.recibirNotificaciones
+  );
 
-  for (const participant of evento?.participantes) {
+  const allParticipantsEmails =
+    participantsNotificationsEnabled?.map((p: any) => p.email) || [];
+  if (participantsNotificationsEnabled.length > 0) {
+    sendEmail({
+      bcc: allParticipantsEmails,
+      subject,
+      html: message,
+    });
+  }
+
+  for (const participant of participantsNotificationsEnabled) {
     await db.notification.create({
       data: {
         userId: participant.id,

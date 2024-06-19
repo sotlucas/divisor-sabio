@@ -22,16 +22,17 @@ datasource db {
 }
 
 model User {
-  id             String         @id
-  email          String         @unique
-  hashedPassword String
-  name           String?
-  sessions       Session[]
-  eventos        Evento[]
-  gastos         Gasto[]
-  deudas         Deuda[]
-  notifications  Notification[]
-  pendientes     GastoPendiente[]
+  id                    String           @id
+  email                 String           @unique
+  hashedPassword        String
+  name                  String?
+  sessions              Session[]
+  eventos               Evento[]
+  gastos                Gasto[]
+  deudas                Deuda[]
+  notifications         Notification[]
+  pendientes            GastoPendiente[]
+  recibirNotificaciones Boolean          @default(true)
 }
 
 model Session {
@@ -42,13 +43,13 @@ model Session {
 }
 
 model Evento {
-  id            String         @id @default(cuid())
+  id            String           @id @default(cuid())
   nombre        String
   descripcion   String?
   fechaInicio   DateTime?
   userId        String
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
   gastos        Gasto[]
   participantes User[]
   notifications Notification[]
@@ -90,7 +91,7 @@ model Notification {
   message   String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
-  evento    Evento  @relation(fields: [eventoId], references: [id])
+  evento    Evento   @relation(fields: [eventoId], references: [id])
   eventoId  String
 }
 
