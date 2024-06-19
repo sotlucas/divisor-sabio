@@ -150,7 +150,15 @@ const validateAction = async (
 };
 
 async function notifyAllEventParticipants(evento: any, gasto: any) {
-  const gastoCreationMessage = `${gasto.pagador.name} creó el gasto ${gasto.nombre} en el evento ${evento?.nombre} por un monto de $${gasto.monto}.`;
+  let subject;
+  let message;
+  if (gasto.esDeudaPagada) {
+    message = `${gasto.pagador.name} pagó una deuda por un monto de $${gasto.monto} en el evento ${evento?.nombre}.`;
+    subject = `Deuda pagada en ${evento?.nombre}`;
+  } else {
+    message = `${gasto.pagador.name} creó el gasto ${gasto.nombre} en el evento ${evento?.nombre} por un monto de $${gasto.monto}.`;
+    subject = `Nuevo gasto en ${evento?.nombre}`;
+  }
 
   const participantsNotificationsEnabled = evento?.participantes?.filter(
     (p: any) => p.recibirNotificaciones
@@ -170,7 +178,7 @@ async function notifyAllEventParticipants(evento: any, gasto: any) {
     await db.notification.create({
       data: {
         userId: participant.id,
-        message: gastoCreationMessage,
+        message,
         read: false,
         eventoId: evento.id,
       },
